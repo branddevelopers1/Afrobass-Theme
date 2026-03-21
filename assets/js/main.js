@@ -94,8 +94,18 @@
           revealObs.unobserve(e.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    }, { threshold: 0.05, rootMargin: '0px 0px 0px 0px' });
     revealEls.forEach(el => revealObs.observe(el));
+    // Also trigger any elements already in viewport on load
+    setTimeout(() => {
+      revealEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('ab-visible');
+          revealObs.unobserve(el);
+        }
+      });
+    }, 100);
   }
 
   /* ─── COUNT UP ─── */

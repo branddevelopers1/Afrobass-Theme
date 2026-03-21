@@ -804,7 +804,7 @@ input, select, textarea { font-family: var(--font-body); }
 
 /* ─── INNER PAGE HERO ─── */
 .ab-page-hero {
-  padding: 160px 56px 80px;
+  padding: 140px 56px 60px;
   border-bottom: 1px solid var(--dark3);
   position: relative; overflow: hidden;
 }
@@ -824,7 +824,7 @@ input, select, textarea { font-family: var(--font-body); }
 }
 
 /* ─── CONTACT PAGE ─── */
-.ab-contact-section { padding: 80px 56px 120px; }
+.ab-contact-section { padding: 80px 56px 120px; min-height: 400px; }
 .ab-contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
 .ab-contact-info-item {
   padding: 28px 0; border-bottom: 1px solid var(--dark3);
