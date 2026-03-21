@@ -223,19 +223,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '4.0.0'
+        '5.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '4.0.0'
+        '5.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '4.0.0',
+        '5.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -425,6 +425,20 @@ add_action('init', 'ab_register_cpt_recaps');
 ============================================================ */
 function ab_handle_booking_form() {
     check_ajax_referer('ab_booking_nonce', 'nonce');
+
+    // Rate limiting — max 3 submissions per IP per hour
+    $ip         = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '');
+    $rate_key   = 'ab_form_rate_' . md5($ip);
+    $rate_count = (int) get_transient($rate_key);
+    if ($rate_count >= 3) {
+        wp_send_json_error('Too many submissions. Please try again later or email us directly at contact@afrobass.com');
+    }
+    set_transient($rate_key, $rate_count + 1, HOUR_IN_SECONDS);
+
+    // Honeypot — bots fill this, humans don't
+    if (!empty($_POST['website'])) {
+        wp_send_json_error('Submission rejected.');
+    }
 
     $fields = [
         'first_name'  => sanitize_text_field($_POST['first_name']  ?? ''),

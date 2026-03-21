@@ -522,6 +522,8 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
           <textarea id="ab_message" name="message" class="ab-form-textarea" placeholder="Which artist are you interested in booking? Tell us about your event..."></textarea>
         </div>
         <button type="submit" class="ab-form-submit ab-reveal">Submit Inquiry →</button>
+        <!-- Honeypot — do not remove -->
+        <input type="text" name="website" style="display:none;position:absolute;left:-9999px;" tabindex="-1" autocomplete="off">
         <div class="ab-form-message" role="alert"></div>
       </form>
     </div>
