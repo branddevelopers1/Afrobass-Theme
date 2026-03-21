@@ -25,6 +25,197 @@ function ab_theme_setup() {
 add_action('after_setup_theme', 'ab_theme_setup');
 
 /* ============================================================
+   FAVICON
+============================================================ */
+function ab_favicon() {
+    $favicon = get_template_directory_uri() . '/assets/images/favicon.png';
+    echo '<link rel="icon" type="image/png" href="' . esc_url($favicon) . '">' . "\n";
+    echo '<link rel="shortcut icon" href="' . esc_url($favicon) . '">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($favicon) . '">' . "\n";
+}
+add_action('wp_head', 'ab_favicon', 1);
+
+/* ============================================================
+   SEO — META, OPEN GRAPH, TWITTER CARD, STRUCTURED DATA
+============================================================ */
+function ab_seo_meta() {
+    global $post;
+
+    $site_name   = 'Afrobass';
+    $phone       = ab_setting('ab_phone') ?: '416.846.6483';
+    $email       = ab_setting('ab_email') ?: 'contact@afrobass.com';
+    $og_img_def  = get_template_directory_uri() . '/assets/images/og-image.jpg';
+    $site_url    = home_url('/');
+
+    // ── Per-page values ──────────────────────────────────────
+    if (is_front_page()) {
+        $title       = "Afrobass — Canada's Premier Afrobeats Event Producer";
+        $description = "Afrobass produces world-class Afrobeats concerts, tours, and live events across Canada. Featuring DJ Spinall, Oxlade, Victony, DJ Tunez and more. Toronto-based since 2018.";
+        $og_img      = $og_img_def;
+        $canonical   = $site_url;
+
+    } elseif (is_singular('ab_event')) {
+        $flyer       = get_field('ab_event_flyer');
+        $date        = get_field('ab_event_date');
+        $venue       = get_field('ab_event_venue');
+        $city        = get_field('ab_event_city');
+        $artists     = get_field('ab_event_artists');
+        $date_fmt    = $date ? date('F j, Y', strtotime($date)) : '';
+        $title       = get_the_title() . ' — Afrobass';
+        $description = 'Live in ' . ($city ?: 'Canada') . ($date_fmt ? ' on ' . $date_fmt : '') . ($venue ? ' at ' . $venue : '') . ($artists ? '. Featuring ' . $artists : '') . '. Tickets available now.';
+        $og_img      = !empty($flyer['url']) ? $flyer['url'] : $og_img_def;
+        $canonical   = get_permalink();
+
+    } elseif (is_singular('ab_tour')) {
+        $flyer       = get_field('ab_tour_flyer');
+        $cities      = get_field('ab_tour_cities');
+        $artist      = get_field('ab_tour_artist');
+        $title       = get_the_title() . ' — Afrobass';
+        $description = ($artist ?: 'Afrobeats') . ' live across Canada' . ($cities ? ' — ' . $cities : '') . '. Presented by Afrobass.';
+        $og_img      = !empty($flyer['url']) ? $flyer['url'] : $og_img_def;
+        $canonical   = get_permalink();
+
+    } elseif (is_page('about') || is_page('our-story')) {
+        $title       = 'Our Story — Afrobass';
+        $description = "Since 2018, Afrobass has been Canada's home for Afrobeats. From sold-out concerts to national tours, we connect Africa's biggest artists with Canadian audiences.";
+        $og_img      = $og_img_def;
+        $canonical   = get_permalink();
+
+    } elseif (is_page('events')) {
+        $title       = 'Events — Afrobass';
+        $description = 'Upcoming Afrobeats concerts and events across Canada. Produced by Afrobass — Toronto, Vancouver, Ottawa and more.';
+        $og_img      = $og_img_def;
+        $canonical   = get_permalink();
+
+    } elseif (is_page('book-talent') || is_page('contact')) {
+        $title       = 'Book Talent — Afrobass';
+        $description = 'Book top Afrobeats artists for your event across Canada. Contact Afrobass — Canada\'s premier Afrobeats event producer.';
+        $og_img      = $og_img_def;
+        $canonical   = get_permalink();
+
+    } else {
+        $title       = get_the_title() ? get_the_title() . ' — ' . $site_name : $site_name;
+        $description = get_bloginfo('description') ?: "Canada's Premier Afrobeats Event Producer.";
+        $og_img      = $og_img_def;
+        $canonical   = get_permalink() ?: $site_url;
+    }
+
+    $description = esc_attr(wp_strip_all_tags($description));
+    $title_esc   = esc_attr($title);
+    $og_img_esc  = esc_url($og_img);
+    $canonical   = esc_url($canonical);
+    ?>
+
+    <!-- SEO Core -->
+    <meta name="description" content="<?php echo $description; ?>">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<?php echo $canonical; ?>">
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="<?php echo esc_attr($site_name); ?>">
+    <meta property="og:title"       content="<?php echo $title_esc; ?>">
+    <meta property="og:description" content="<?php echo $description; ?>">
+    <meta property="og:url"         content="<?php echo $canonical; ?>">
+    <meta property="og:image"       content="<?php echo $og_img_esc; ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale"      content="en_CA">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="<?php echo $title_esc; ?>">
+    <meta name="twitter:description" content="<?php echo $description; ?>">
+    <meta name="twitter:image"       content="<?php echo $og_img_esc; ?>">
+
+    <!-- Geo / Local SEO -->
+    <meta name="geo.region"      content="CA-ON">
+    <meta name="geo.placename"   content="Toronto, Ontario, Canada">
+    <meta name="geo.position"    content="43.6532;-79.3832">
+    <meta name="ICBM"            content="43.6532, -79.3832">
+
+    <!-- Structured Data — Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EntertainmentBusiness",
+      "name": "Afrobass",
+      "alternateName": "Afrobass Inc.",
+      "description": "Canada's premier Afrobeats event production company. Concerts, tours, and live events across Canada since 2018.",
+      "url": "<?php echo esc_js(home_url('/')); ?>",
+      "logo": "<?php echo esc_js(get_template_directory_uri() . '/assets/images/favicon.png'); ?>",
+      "image": "<?php echo esc_js($og_img); ?>",
+      "telephone": "<?php echo esc_js($phone); ?>",
+      "email": "<?php echo esc_js($email); ?>",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Toronto",
+        "addressRegion": "ON",
+        "addressCountry": "CA"
+      },
+      "areaServed": "Canada",
+      "foundingDate": "2018",
+      "sameAs": [
+        "<?php echo esc_js(ab_setting('ab_instagram')); ?>",
+        "<?php echo esc_js(ab_setting('ab_youtube')); ?>",
+        "<?php echo esc_js(ab_setting('ab_tiktok')); ?>",
+        "<?php echo esc_js(ab_setting('ab_facebook')); ?>"
+      ]
+    }
+    </script>
+
+    <?php
+    // Event structured data for single event pages
+    if (is_singular('ab_event')):
+        $ev_date   = get_field('ab_event_date');
+        $ev_venue  = get_field('ab_event_venue');
+        $ev_city   = get_field('ab_event_city');
+        $ev_ticket = get_field('ab_event_ticket_url');
+        $ev_status = get_field('ab_event_status');
+        $ev_flyer  = get_field('ab_event_flyer');
+        $ev_img    = !empty($ev_flyer['url']) ? $ev_flyer['url'] : $og_img_def;
+        $ev_status_schema = ($ev_status === 'sold_out') ? 'SoldOut' : (($ev_status === 'upcoming' || $ev_status === 'on_sale') ? 'EventScheduled' : 'EventPostponed');
+    ?>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicEvent",
+      "name": "<?php echo esc_js(get_the_title()); ?>",
+      "startDate": "<?php echo esc_js($ev_date ?: ''); ?>",
+      "eventStatus": "https://schema.org/<?php echo esc_js($ev_status_schema); ?>",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": "<?php echo esc_js($ev_venue ?: 'TBA'); ?>",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "<?php echo esc_js($ev_city ?: 'Toronto'); ?>",
+          "addressCountry": "CA"
+        }
+      },
+      "image": "<?php echo esc_js($ev_img); ?>",
+      "organizer": {
+        "@type": "Organization",
+        "name": "Afrobass",
+        "url": "<?php echo esc_js(home_url('/')); ?>"
+      }
+      <?php if ($ev_ticket): ?>
+      ,"offers": {
+        "@type": "Offer",
+        "url": "<?php echo esc_js($ev_ticket); ?>",
+        "availability": "https://schema.org/<?php echo $ev_status === 'sold_out' ? 'SoldOut' : 'InStock'; ?>",
+        "validFrom": "<?php echo esc_js(date('Y-m-d')); ?>"
+      }
+      <?php endif; ?>
+    }
+    </script>
+    <?php endif; ?>
+
+    <?php
+}
+add_action('wp_head', 'ab_seo_meta', 5);
+
+/* ============================================================
    ENQUEUE SCRIPTS & STYLES
 ============================================================ */
 function ab_enqueue_assets() {
@@ -32,19 +223,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '2.0.0'
+        '3.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '1.0.0'
+        '3.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '1.0.0',
+        '3.0.0',
         true
     );
     // Pass AJAX data to JS

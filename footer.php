@@ -45,7 +45,7 @@ $desc     = ab_setting('ab_footer_desc') ?: "Toronto's leading Afrobeats event p
 
   <div class="ab-footer-bottom">
     <span class="ab-footer-copy">
-      &copy; <?php echo date('Y'); ?> Test Afrobass Inc. All Rights Reserved.
+      &copy; <?php echo date('Y'); ?> Afrobass Inc. All Rights Reserved.
     </span>
     <nav class="ab-footer-social" aria-label="Social media">
       <?php if ($ig): ?><a href="<?php echo esc_url($ig); ?>" class="ab-social-link" target="_blank" rel="noopener">Instagram</a><?php endif; ?>
