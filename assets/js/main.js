@@ -49,7 +49,7 @@
   const nav = document.getElementById('ab-nav');
   if (nav) {
     window.addEventListener('scroll', () => {
-      nav.classList.toggle('ab-scrolled', window.scrollY > 60);
+      nav.classList.toggle('ab-scrolled', window.scrollY > 30);
     }, { passive: true });
   }
 
