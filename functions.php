@@ -223,19 +223,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '5.0.0'
+        '7.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '5.0.0'
+        '7.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '5.0.0',
+        '7.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -519,8 +519,29 @@ function ab_youtube_embed(string $url): string {
 }
 
 /* ============================================================
-   FLUSH REWRITE RULES ON ACTIVATION
+   FORCE PAGE TEMPLATES BY SLUG
+   Eliminates need to manually assign templates in WP admin
 ============================================================ */
+function ab_force_page_templates($template) {
+    if (!is_page()) return $template;
+
+    $slug = get_post_field('post_name', get_queried_object_id());
+    $map  = [
+        'events'      => 'page-events.php',
+        'tours'       => 'page-events.php',
+        'about'       => 'page-about.php',
+        'our-story'   => 'page-about.php',
+        'contact'     => 'page-contact.php',
+        'book-talent' => 'page-contact.php',
+    ];
+
+    if (isset($map[$slug])) {
+        $located = locate_template($map[$slug]);
+        if ($located) return $located;
+    }
+    return $template;
+}
+add_filter('template_include', 'ab_force_page_templates', 99);
 function ab_flush_rewrites() { flush_rewrite_rules(); }
 add_action('after_switch_theme', 'ab_flush_rewrites');
 
