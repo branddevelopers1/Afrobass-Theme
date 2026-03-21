@@ -223,19 +223,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '3.0.0'
+        '4.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '3.0.0'
+        '4.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '3.0.0',
+        '4.0.0',
         true
     );
     // Pass AJAX data to JS

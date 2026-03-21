@@ -214,14 +214,15 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     $upcoming = new WP_Query([
       'post_type'      => ['ab_event','ab_tour'],
       'posts_per_page' => 3,
-      'meta_query'     => [[
+      'meta_query'     => [
         'relation' => 'OR',
         ['key'=>'ab_event_status','value'=>['upcoming','on_sale'],'compare'=>'IN'],
         ['key'=>'ab_tour_status', 'value'=>['upcoming','on_sale'],'compare'=>'IN'],
-      ]],
-      'orderby'    => 'meta_value',
-      'meta_key'   => 'ab_event_date',
-      'order'      => 'ASC',
+        ['key'=>'ab_event_status','compare'=>'NOT EXISTS'],
+        ['key'=>'ab_event_status','value'=>'','compare'=>'='],
+      ],
+      'orderby' => 'date',
+      'order'   => 'DESC',
     ]);
 
     if ($upcoming->have_posts()):
@@ -238,7 +239,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
         $display_date = ab_format_event_date($date);
         if ($city) $display_date .= ' · ' . $city;
         $link = $ticket ?: get_permalink();
-        $link_text = ($status === 'sold_out') ? 'Sold Out' : (($status === 'upcoming') ? 'Tickets Coming Soon →' : 'Get Tickets →');
+        $link_text = ($status === 'sold_out') ? 'Sold Out' : ($ticket ? 'Get Tickets →' : 'Tickets Coming Soon →');
     ?>
       <div class="ab-event-card ab-reveal">
         <div class="ab-event-img-wrap">
