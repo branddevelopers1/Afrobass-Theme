@@ -223,19 +223,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '8.0.0'
+        '10.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '8.0.0'
+        '10.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '8.0.0',
+        '10.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -261,8 +261,8 @@ function ab_register_cpt_events() {
             'menu_name'     => 'Events',
         ],
         'public'        => true,
-        'has_archive'   => true,
-        'rewrite'       => ['slug' => 'events'],
+        'has_archive'   => 'events',
+        'rewrite'       => ['slug' => 'event', 'with_front' => false],
         'supports'      => ['title', 'thumbnail', 'editor'],
         'menu_icon'     => 'dashicons-calendar-alt',
         'show_in_rest'  => true,
@@ -285,8 +285,8 @@ function ab_register_cpt_tours() {
             'menu_name'     => 'Tours',
         ],
         'public'        => true,
-        'has_archive'   => true,
-        'rewrite'       => ['slug' => 'tours'],
+        'has_archive'   => 'tours',
+        'rewrite'       => ['slug' => 'tour', 'with_front' => false],
         'supports'      => ['title', 'thumbnail', 'editor'],
         'menu_icon'     => 'dashicons-location-alt',
         'show_in_rest'  => true,
@@ -523,10 +523,7 @@ function ab_youtube_embed(string $url): string {
    Eliminates need to manually assign templates in WP admin
 ============================================================ */
 function ab_force_page_templates($template) {
-    if (!is_page()) return $template;
-
-    $slug = get_post_field('post_name', get_queried_object_id());
-    $map  = [
+    $map = [
         'events'      => 'page-events.php',
         'tours'       => 'page-events.php',
         'about'       => 'page-about.php',
@@ -535,10 +532,31 @@ function ab_force_page_templates($template) {
         'book-talent' => 'page-contact.php',
     ];
 
-    if (isset($map[$slug])) {
-        $located = locate_template($map[$slug]);
-        if ($located) return $located;
+    // Handle regular pages by slug
+    if (is_page()) {
+        $slug = get_post_field('post_name', get_queried_object_id());
+        if (isset($map[$slug])) {
+            $located = locate_template($map[$slug]);
+            if ($located) return $located;
+        }
     }
+
+    // Handle CPT archives — /events/ and /tours/ point to our page templates
+    if (is_post_type_archive('ab_event')) {
+        $page = get_page_by_path('events');
+        if ($page) {
+            $located = locate_template('page-events.php');
+            if ($located) return $located;
+        }
+    }
+    if (is_post_type_archive('ab_tour')) {
+        $page = get_page_by_path('tours');
+        if ($page) {
+            $located = locate_template('page-events.php');
+            if ($located) return $located;
+        }
+    }
+
     return $template;
 }
 add_filter('template_include', 'ab_force_page_templates', 99);
