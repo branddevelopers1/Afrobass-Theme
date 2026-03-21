@@ -32,7 +32,7 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '1.0.0'
+        '2.0.0'
     );
     wp_enqueue_style(
         'ab-style',
