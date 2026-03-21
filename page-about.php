@@ -36,9 +36,9 @@ $milestones  = get_field('ab_milestones') ?: [];
     <div class="ab-story-body ab-reveal">
       <?php if ($story_body): echo wp_kses_post($story_body);
       else: ?>
-        What started as a <strong>passion for Afrobeats</strong> in 2018 has grown into Canada's most trusted Afrobeats production company. We've toured artists coast to coast, sold out venues from 500 to 2,300 people, and built a community of fans who show up every single time.
+        What started as a <strong>shared passion for Afrobeats</strong> in 2018 has grown into Canada's most trusted Afrobeats production company. We've toured artists coast to coast, sold out venues from 500 to 2,300 people, and built a community of fans who show up every single time.
         <br><br>
-        Our founder Kay O built Afrobass from the ground up — with nothing but hustle, deep roots in the music, and a vision: <strong>bring the world-class sound of African music to every major city in Canada.</strong>
+        The Afrobass team built this from the ground up — with nothing but hustle, deep roots in the music, and a shared vision: <strong>bring the world-class sound of African music to every major city in Canada.</strong>
         <br><br>
         Since 2018, Afrobass has collaborated with DJ Ecool (Davido's official DJ), DJ Tunez (Wizkid's DJ), orchestrated a Canada tour with Afro B, sold out El Mocambo with Blaq Bonez (CP24 coverage), packed The Opera House with WSTRN (900 people), and is now producing the inaugural Afrobass Music Festival at Queen Elizabeth Theatre.
       <?php endif; ?>
