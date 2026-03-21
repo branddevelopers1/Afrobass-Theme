@@ -1,0 +1,15 @@
+/*
+Theme Name: Afrobass
+Theme URI: https://afrobass.com
+Author: Afrobass Inc.
+Author URI: https://afrobass.com
+Description: Custom WordPress theme for Afrobass — Canada's Premier Event Producer. Built with ACF, custom post types for Events and Tours, and a full cinematic design system.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+License: Private
+Text Domain: afrobass
+*/
+
+/* All styles are in assets/css/main.css — loaded via functions.php */
