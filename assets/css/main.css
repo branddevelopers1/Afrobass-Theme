@@ -176,7 +176,8 @@ input, select, textarea { font-family: var(--font-body); }
 /* ─── HERO ─── */
 #ab-hero {
   position: relative; height: 100vh; min-height: 760px;
-  display: flex; align-items: flex-end; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
 }
 #ab-hero-video-wrap {
   position: absolute; inset: 0; overflow: hidden;
@@ -210,7 +211,10 @@ input, select, textarea { font-family: var(--font-body); }
   background: linear-gradient(to right, rgba(8,8,8,0.7) 0%, transparent 50%);
 }
 #ab-hero-content {
-  position: relative; z-index: 2; padding: 200px 56px 96px; max-width: 900px;
+  position: relative; z-index: 2;
+  padding: 0 56px 100px;
+  max-width: 860px;
+  width: 100%;
 }
 .ab-hero-eyebrow {
   display: flex; align-items: center; gap: 16px;
@@ -224,10 +228,10 @@ input, select, textarea { font-family: var(--font-body); }
 }
 .ab-hero-h1 {
   font-family: var(--font-display);
-  font-size: clamp(80px, 12vw, 160px);
-  line-height: 0.88; letter-spacing: 2px;
+  font-size: clamp(56px, 7.5vw, 96px);
+  line-height: 0.9; letter-spacing: 2px;
   color: var(--white); text-transform: uppercase;
-  margin-bottom: 28px; opacity: 0;
+  margin-bottom: 20px; opacity: 0;
   animation: abHeroUp 1s 2.4s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 .ab-hero-h1 .ab-outline {
@@ -236,8 +240,8 @@ input, select, textarea { font-family: var(--font-body); }
 }
 .ab-hero-h1 .ab-accent { color: var(--orange); }
 .ab-hero-desc {
-  font-size: 16px; font-weight: 300; color: var(--white-60);
-  line-height: 1.75; max-width: 480px; margin-bottom: 40px;
+  font-size: 15px; font-weight: 300; color: var(--white-60);
+  line-height: 1.7; max-width: 480px; margin-bottom: 28px;
   opacity: 0; animation: abHeroUp 0.8s 2.6s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 .ab-hero-actions {
@@ -888,8 +892,8 @@ input, select, textarea { font-family: var(--font-body); }
   .ab-nav-links { display: none; }
   .ab-nav-right { display: none; }
   .ab-hamburger { display: flex; }
-  #ab-hero-content { padding: 160px 24px 72px; }
-  .ab-hero-h1 { font-size: 64px; }
+  #ab-hero-content { padding: 0 24px 64px; }
+  .ab-hero-h1 { font-size: 52px; }
   .ab-stats { grid-template-columns: 1fr 1fr; }
   .ab-stat-block { padding: 40px 32px; }
   .ab-services-section, .ab-events-section, .ab-recaps-section,
