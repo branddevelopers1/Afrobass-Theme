@@ -159,7 +159,8 @@ function ab_seo_meta() {
         "<?php echo esc_js(ab_setting('ab_instagram')); ?>",
         "<?php echo esc_js(ab_setting('ab_youtube')); ?>",
         "<?php echo esc_js(ab_setting('ab_tiktok')); ?>",
-        "<?php echo esc_js(ab_setting('ab_facebook')); ?>"
+        "<?php echo esc_js(ab_setting('ab_facebook')); ?>",
+        "<?php echo esc_js(ab_setting('ab_twitter')); ?>"
       ]
     }
     </script>
@@ -223,19 +224,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '10.0.0'
+        '11.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '10.0.0'
+        '11.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '10.0.0',
+        '11.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -385,6 +386,7 @@ function ab_register_acf_fields() {
                 ['key'=>'field_ab_youtube',      'label'=>'YouTube URL',     'name'=>'ab_youtube',      'type'=>'url'],
                 ['key'=>'field_ab_tiktok',       'label'=>'TikTok URL',      'name'=>'ab_tiktok',       'type'=>'url'],
                 ['key'=>'field_ab_facebook',     'label'=>'Facebook URL',    'name'=>'ab_facebook',     'type'=>'url'],
+                ['key'=>'field_ab_twitter',      'label'=>'X / Twitter URL', 'name'=>'ab_twitter',      'type'=>'url'],
                 ['key'=>'field_ab_footer_desc',  'label'=>'Footer Description','name'=>'ab_footer_desc','type'=>'textarea','rows'=>3],
             ],
             'location' => [[ ['param'=>'options_page','operator'=>'==','value'=>'afrobass-settings'] ]],

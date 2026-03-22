@@ -1,7 +1,7 @@
 # Afrobass WordPress Theme
 **Version:** 1.0.0  
-**Author:** Afrobass Inc.  
-**Contact:** contact@afrobass.com | 416.846.6483
+**Author:** Brand Developers  
+**Contact:** https://branddevelopers.ca
 
 ---
 
