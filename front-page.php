@@ -295,46 +295,76 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     endif; ?>
   </div>
 
-  <!-- Past Events Sub-row -->
-  <?php
-  $past = new WP_Query([
-    'post_type'      => 'ab_event',
-    'posts_per_page' => 3,
-    'meta_query'     => [['key'=>'ab_event_status','value'=>'past','compare'=>'=']],
-    'orderby'        => 'meta_value',
-    'meta_key'       => 'ab_event_date',
-    'order'          => 'DESC',
-  ]);
-  if ($past->have_posts()):
-  ?>
-    <div class="ab-past-label">Past Events</div>
-    <div class="ab-past-events-grid">
-      <?php while ($past->have_posts()): $past->the_post();
-        $flyer = get_field('ab_event_flyer');
-        $date  = get_field('ab_event_date');
-        $city  = get_field('ab_event_city');
-        $disp  = ab_format_event_date($date); if ($city) $disp .= ' · '.$city;
-      ?>
-        <div class="ab-event-card ab-reveal">
-          <div class="ab-event-img-wrap">
-            <?php if (!empty($flyer['url'])): ?>
-              <img class="ab-event-img" src="<?php echo esc_url($flyer['url']); ?>" alt="<?php the_title_attribute(); ?>">
-            <?php elseif (has_post_thumbnail()): ?>
-              <?php the_post_thumbnail('ab-event-thumb', ['class'=>'ab-event-img']); ?>
-            <?php else: ?>
-              <div class="ab-event-img-fallback" style="background:#111;height:100%;"></div>
-            <?php endif; ?>
-            <span class="ab-event-tag" style="background:#333;">Past</span>
-          </div>
-          <div class="ab-event-body">
-            <div class="ab-event-date"><?php echo esc_html($disp); ?></div>
-            <div class="ab-event-name"><?php the_title(); ?></div>
-            <a href="<?php the_permalink(); ?>" class="ab-event-link">View Recap →</a>
-          </div>
-        </div>
-      <?php endwhile; wp_reset_postdata(); ?>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FLYER MARQUEE
+═══════════════════════════════════════════ -->
+<section class="ab-flyers-section" id="portfolio">
+  <div class="ab-flyers-header">
+    <div class="ab-reveal">
+      <div class="ab-section-kicker">Our Portfolio</div>
+      <div class="ab-section-title">Past Events</div>
     </div>
-  <?php endif; ?>
+    <a href="<?php echo esc_url(home_url('/events?filter=past')); ?>" class="ab-view-all ab-reveal">
+      View All <span class="ab-arr">→</span>
+    </a>
+  </div>
+
+  <div class="ab-flyers-marquee ab-reveal">
+    <div class="ab-flyers-track">
+      <?php
+      // Build flyer list from past events CPT + fallback to known WP image URLs
+      $flyer_events = new WP_Query(['post_type'=>'ab_event','posts_per_page'=>12,'meta_query'=>[['key'=>'ab_event_status','value'=>'past']]]);
+      $flyer_items = [];
+
+      if ($flyer_events->have_posts()):
+        while ($flyer_events->have_posts()): $flyer_events->the_post();
+          $f = get_field('ab_event_flyer') ?: [];
+          $flyer_items[] = ['url' => !empty($f['url']) ? $f['url'] : '', 'name' => get_the_title(), 'bg' => '#1a0800'];
+        endwhile; wp_reset_postdata();
+      endif;
+
+      // Always include known real flyers as fallback / supplement
+      $known_flyers = [
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Shes-Afrique-with-DJ-Tunez.png','name'=>"She's Afrique",'bg'=>'#1a0800'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/mayorkun-full.png','name'=>'Pop w/ Mayorkun','bg'=>'#0a1a00'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Teni-April-27th.png','name'=>'Teni in Toronto','bg'=>'#00101a'],
+        ['url'=>'https://afrobass.com/wp-content/uploads/2023/04/Afrobass-live-in-Toronto-square-scaled.jpg','name'=>'Blaq Bonez','bg'=>'#0d0018'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/FINAL-afrofete.png','name'=>'Afro Fete','bg'=>'#1a0800'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/afrobass-dj-e-cool-ottawa.jpg','name'=>'DJ Ecool Ottawa','bg'=>'#001800'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Last-Vibe-front-2.jpeg','name'=>'Last Vibe','bg'=>'#180018'],
+        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/juls-toronto-march-8-afrobass.jpeg','name'=>"Jul's Baby",'bg'=>'#0a1200'],
+      ];
+      // Always merge CPT flyers WITH known flyers — never replace
+      $flyer_items = array_merge($flyer_items, $known_flyers);
+      // Remove duplicates by URL
+      $seen_urls = [];
+      $flyer_items = array_filter($flyer_items, function($f) use (&$seen_urls) {
+        if (empty($f['url'])) return false;
+        if (in_array($f['url'], $seen_urls)) return false;
+        $seen_urls[] = $f['url'];
+        return true;
+      });
+      $flyer_items = array_values($flyer_items);
+
+      // Duplicate for seamless loop
+      $all_flyers = array_merge($flyer_items, $flyer_items);
+      foreach ($all_flyers as $flyer): ?>
+        <div class="ab-flyer-card">
+          <?php if (!empty($flyer['url'])): ?>
+            <img src="<?php echo esc_url($flyer['url']); ?>" alt="<?php echo esc_attr($flyer['name']); ?>" loading="lazy"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <?php endif; ?>
+          <div class="ab-flyer-ph" style="background:<?php echo esc_attr($flyer['bg']); ?>;<?php echo empty($flyer['url']) ? 'display:flex;' : 'display:none;'; ?>">
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(255,69,0,0.3);">★</span>
+            <span class="ab-flyer-ph-name"><?php echo esc_html($flyer['name']); ?></span>
+          </div>
+          <div class="ab-flyer-overlay"><span><?php echo esc_html($flyer['name']); ?></span></div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -409,66 +439,6 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
           </div>
         </div>
     <?php endforeach; endif; ?>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════
-     FLYER MARQUEE
-═══════════════════════════════════════════ -->
-<section class="ab-flyers-section" id="portfolio">
-  <div class="ab-flyers-header">
-    <div class="ab-reveal">
-      <div class="ab-section-kicker">Our Portfolio</div>
-      <div class="ab-section-title">Past Events</div>
-    </div>
-    <a href="<?php echo esc_url(home_url('/events?filter=past')); ?>" class="ab-view-all ab-reveal">
-      View All <span class="ab-arr">→</span>
-    </a>
-  </div>
-
-  <div class="ab-flyers-marquee ab-reveal">
-    <div class="ab-flyers-track">
-      <?php
-      // Build flyer list from past events CPT + fallback to known WP image URLs
-      $flyer_events = new WP_Query(['post_type'=>'ab_event','posts_per_page'=>12,'meta_query'=>[['key'=>'ab_event_status','value'=>'past']]]);
-      $flyer_items = [];
-
-      if ($flyer_events->have_posts()):
-        while ($flyer_events->have_posts()): $flyer_events->the_post();
-          $f = get_field('ab_event_flyer') ?: [];
-          $flyer_items[] = ['url' => !empty($f['url']) ? $f['url'] : '', 'name' => get_the_title(), 'bg' => '#1a0800'];
-        endwhile; wp_reset_postdata();
-      endif;
-
-      // Always include known real flyers as fallback / supplement
-      $known_flyers = [
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Shes-Afrique-with-DJ-Tunez.png','name'=>"She's Afrique",'bg'=>'#1a0800'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/mayorkun-full.png','name'=>'Pop w/ Mayorkun','bg'=>'#0a1a00'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Teni-April-27th.png','name'=>'Teni in Toronto','bg'=>'#00101a'],
-        ['url'=>'https://afrobass.com/wp-content/uploads/2023/04/Afrobass-live-in-Toronto-square-scaled.jpg','name'=>'Blaq Bonez','bg'=>'#0d0018'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/FINAL-afrofete.png','name'=>'Afro Fete','bg'=>'#1a0800'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/afrobass-dj-e-cool-ottawa.jpg','name'=>'DJ Ecool Ottawa','bg'=>'#001800'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/Last-Vibe-front-2.jpeg','name'=>'Last Vibe','bg'=>'#180018'],
-        ['url'=>'http://afrobass.com/wp-content/uploads/2022/11/juls-toronto-march-8-afrobass.jpeg','name'=>"Jul's Baby",'bg'=>'#0a1200'],
-      ];
-      if (empty($flyer_items)) $flyer_items = $known_flyers;
-
-      // Duplicate for seamless loop
-      $all_flyers = array_merge($flyer_items, $flyer_items);
-      foreach ($all_flyers as $flyer): ?>
-        <div class="ab-flyer-card">
-          <?php if (!empty($flyer['url'])): ?>
-            <img src="<?php echo esc_url($flyer['url']); ?>" alt="<?php echo esc_attr($flyer['name']); ?>" loading="lazy"
-              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-          <?php endif; ?>
-          <div class="ab-flyer-ph" style="background:<?php echo esc_attr($flyer['bg']); ?>;<?php echo empty($flyer['url']) ? 'display:flex;' : 'display:none;'; ?>">
-            <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(255,69,0,0.3);">★</span>
-            <span class="ab-flyer-ph-name"><?php echo esc_html($flyer['name']); ?></span>
-          </div>
-          <div class="ab-flyer-overlay"><span><?php echo esc_html($flyer['name']); ?></span></div>
-        </div>
-      <?php endforeach; ?>
-    </div>
   </div>
 </section>
 
