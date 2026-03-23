@@ -51,7 +51,6 @@ $socials = [
       <a href="<?php echo esc_url(home_url('/about')); ?>">Our Story</a>
       <a href="<?php echo esc_url(home_url('/#services')); ?>">What We Do</a>
       <a href="<?php echo esc_url(home_url('/book-talent')); ?>">Book Talent</a>
-      <a href="<?php echo esc_url(home_url('/contact')); ?>">Press & Media</a>
     </div>
 
     <div class="ab-footer-col">
@@ -67,7 +66,9 @@ $socials = [
       <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a>
       <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9]/', '', $phone)); ?>"><?php echo esc_html($phone); ?></a>
       <a href="<?php echo esc_url(home_url('/book-talent')); ?>">Talent Booking</a>
-      <a href="<?php echo esc_url(home_url('/contact')); ?>">Sponsorship</a>
+      <a href="<?php echo esc_url(home_url('/contact')); ?>">Invest / Sponsorship</a>
+      <a href="<?php echo esc_url(home_url('/contact')); ?>">Brand Partnerships</a>
+      <a href="<?php echo esc_url(home_url('/contact')); ?>">Press & Media</a>
     </div>
 
   </div>

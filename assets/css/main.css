@@ -918,4 +918,7 @@ input, select, textarea { font-family: var(--font-body); }
   .ab-footer { padding: 56px 24px 28px; }
   .ab-footer-top { grid-template-columns: 1fr; gap: 40px; }
   .ab-footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  /* Hide video on mobile — use dark fallback instead */
+  #ab-hero-video { display: none; }
+  .ab-hero-fallback { display: block !important; }
 }

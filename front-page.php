@@ -578,7 +578,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     <p class="ab-cta-desc ab-reveal">Partner with Canada's leading Afrobeats event producer. Concerts, tours, festivals, corporate events — we make it unforgettable.</p>
     <div class="ab-cta-btns ab-reveal">
       <a href="<?php echo esc_url(home_url('/book-talent')); ?>" class="ab-btn-lg-fill">Book an Artist</a>
-      <a href="<?php echo esc_url(home_url('/contact')); ?>" class="ab-btn-lg-outline">Sponsorship</a>
+      <a href="<?php echo esc_url(home_url('/contact')); ?>" class="ab-btn-lg-outline">Brand Partnerships</a>
     </div>
   </div>
   <div class="ab-cta-right">

@@ -224,19 +224,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '11.0.0'
+        '13.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '11.0.0'
+        '13.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '11.0.0',
+        '13.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -262,7 +262,7 @@ function ab_register_cpt_events() {
             'menu_name'     => 'Events',
         ],
         'public'        => true,
-        'has_archive'   => 'events',
+        'has_archive'   => false,
         'rewrite'       => ['slug' => 'event', 'with_front' => false],
         'supports'      => ['title', 'thumbnail', 'editor'],
         'menu_icon'     => 'dashicons-calendar-alt',
@@ -286,7 +286,7 @@ function ab_register_cpt_tours() {
             'menu_name'     => 'Tours',
         ],
         'public'        => true,
-        'has_archive'   => 'tours',
+        'has_archive'   => false,
         'rewrite'       => ['slug' => 'tour', 'with_front' => false],
         'supports'      => ['title', 'thumbnail', 'editor'],
         'menu_icon'     => 'dashicons-location-alt',
@@ -525,43 +525,77 @@ function ab_youtube_embed(string $url): string {
    Eliminates need to manually assign templates in WP admin
 ============================================================ */
 function ab_force_page_templates($template) {
-    $map = [
+    if (!is_page()) return $template;
+
+    $slug = get_post_field('post_name', get_queried_object_id());
+    $map  = [
         'events'      => 'page-events.php',
         'tours'       => 'page-events.php',
         'about'       => 'page-about.php',
         'our-story'   => 'page-about.php',
         'contact'     => 'page-contact.php',
-        'book-talent' => 'page-contact.php',
+        'book-talent' => 'page-book-talent.php',
     ];
 
-    // Handle regular pages by slug
-    if (is_page()) {
-        $slug = get_post_field('post_name', get_queried_object_id());
-        if (isset($map[$slug])) {
-            $located = locate_template($map[$slug]);
-            if ($located) return $located;
-        }
+    if (isset($map[$slug])) {
+        $located = locate_template($map[$slug]);
+        if ($located) return $located;
     }
-
-    // Handle CPT archives — /events/ and /tours/ point to our page templates
-    if (is_post_type_archive('ab_event')) {
-        $page = get_page_by_path('events');
-        if ($page) {
-            $located = locate_template('page-events.php');
-            if ($located) return $located;
-        }
-    }
-    if (is_post_type_archive('ab_tour')) {
-        $page = get_page_by_path('tours');
-        if ($page) {
-            $located = locate_template('page-events.php');
-            if ($located) return $located;
-        }
-    }
-
     return $template;
 }
 add_filter('template_include', 'ab_force_page_templates', 99);
+
+/* ─── BOOKING ENQUIRY AJAX ─── */
+function ab_booking_enquiry() {
+    check_ajax_referer('ab_nonce', 'nonce');
+    if (!empty($_POST['website'])) { wp_send_json_error('Rejected.'); }
+
+    $ip    = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '');
+    $key   = 'ab_book_rate_' . md5($ip);
+    $count = (int) get_transient($key);
+    if ($count >= 5) { wp_send_json_error('Too many submissions. Please try again later.'); }
+    set_transient($key, $count + 1, HOUR_IN_SECONDS);
+
+    $name       = sanitize_text_field($_POST['name']       ?? '');
+    $email      = sanitize_email($_POST['email']           ?? '');
+    $company    = sanitize_text_field($_POST['company']    ?? '');
+    $phone      = sanitize_text_field($_POST['phone']      ?? '');
+    $artist     = sanitize_text_field($_POST['artist']     ?? '');
+    $event_type = sanitize_text_field($_POST['event_type'] ?? '');
+    $event_date = sanitize_text_field($_POST['event_date'] ?? '');
+    $location   = sanitize_text_field($_POST['location']   ?? '');
+    $capacity   = sanitize_text_field($_POST['capacity']   ?? '');
+    $budget     = sanitize_text_field($_POST['budget']     ?? '');
+    $message    = sanitize_textarea_field($_POST['message'] ?? '');
+
+    if (!$email || !is_email($email)) { wp_send_json_error('Please enter a valid email address.'); }
+    if (!$name) { wp_send_json_error('Please enter your name.'); }
+
+    $to      = get_field('ab_email', 'option') ?: 'contact@afrobass.com';
+    $subject = "Booking Enquiry — {$name}" . ($artist ? " ({$artist})" : '');
+    $body    = "New booking enquiry from afrobass.com\n\n";
+    $body   .= "Name:       {$name}\n";
+    $body   .= "Email:      {$email}\n";
+    $body   .= "Phone:      {$phone}\n";
+    $body   .= "Company:    {$company}\n\n";
+    $body   .= "Artist:     {$artist}\n";
+    $body   .= "Event Type: {$event_type}\n";
+    $body   .= "Event Date: {$event_date}\n";
+    $body   .= "Location:   {$location}\n";
+    $body   .= "Capacity:   {$capacity}\n";
+    $body   .= "Budget:     {$budget}\n\n";
+    $body   .= "Additional Details:\n{$message}\n";
+
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        "Reply-To: {$name} <{$email}>",
+    ];
+
+    wp_mail($to, $subject, $body, $headers);
+    wp_send_json_success('Your booking enquiry has been submitted. Our team will respond within 48 hours.');
+}
+add_action('wp_ajax_ab_booking_enquiry',        'ab_booking_enquiry');
+add_action('wp_ajax_nopriv_ab_booking_enquiry', 'ab_booking_enquiry');
 function ab_flush_rewrites() { flush_rewrite_rules(); }
 add_action('after_switch_theme', 'ab_flush_rewrites');
 
