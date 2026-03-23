@@ -27,7 +27,7 @@ if ($featured_query->have_posts()) {
   $featured_query->the_post();
   $featured_id       = get_the_ID();
   $fe['title']       = get_the_title();
-  $fe['permalink']   = get_permalink();
+  $fe['permalink']   = home_url('/events/' . get_post_field('post_name', get_the_ID()) . '/');
   $fe['date']        = get_field('ab_event_date');
   $fe['time']        = get_field('ab_event_time');
   $fe['venue']       = get_field('ab_event_venue');
@@ -199,7 +199,7 @@ $past_query = new WP_Query([
       $flyer  = get_field('ab_event_flyer');
       $ddate  = $date ? date('M j, Y', strtotime($date)) : '';
       if ($city) $ddate .= ' · ' . $city;
-      $link   = $ticket ?: get_permalink();
+      $link   = $ticket ?: home_url('/events/' . get_post_field('post_name', get_the_ID()) . '/');
       $ltxt   = $status === 'sold_out' ? 'Sold Out' : ($ticket ? 'Get Tickets →' : 'Tickets Coming Soon →');
     ?>
       <div class="ab-event-card ab-reveal">
@@ -265,7 +265,7 @@ $past_query = new WP_Query([
           <div class="ab-event-date"><?php echo esc_html($ddate); ?></div>
           <div class="ab-event-name"><?php the_title(); ?></div>
           <?php if ($venue): ?><div class="ab-event-venue"><?php echo esc_html($venue); ?></div><?php endif; ?>
-          <a href="<?php the_permalink(); ?>" class="ab-event-link">View Recap →</a>
+          <a href="<?php echo esc_url(home_url('/events/' . get_post_field('post_name', get_the_ID()) . '/')); ?>" class="ab-event-link">View Recap →</a>
         </div>
       </div>
     <?php endwhile; wp_reset_postdata(); ?>
