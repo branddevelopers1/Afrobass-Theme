@@ -40,7 +40,7 @@ $milestones  = get_field('ab_milestones') ?: [];
         <br><br>
         The Afrobass team built this from the ground up — with nothing but hustle, deep roots in the music, and a shared vision: <strong>bring the world-class sound of African music to every major city in Canada.</strong>
         <br><br>
-        Since 2018, Afrobass has collaborated with DJ Ecool (Davido's official DJ), DJ Tunez (Wizkid's DJ), orchestrated a Canada tour with Afro B, sold out El Mocambo with Blaq Bonez (CP24 coverage), packed The Opera House with WSTRN (900 people), and is now producing the inaugural Afrobass Music Festival at Queen Elizabeth Theatre.
+        Since 2018, Afrobass has worked with DJ Ecool (Davido's official DJ), DJ Tunez (Wizkid's DJ), Afro B, Blaqbonez, WSTRN, Oxlade, Ayra Starr, Teni the Entertainer, Falz the Bad Guy, and many more — executing national tours across Canada and sold-out shows from coast to coast.
       <?php endif; ?>
     </div>
     <?php if (!empty($milestones)): ?>

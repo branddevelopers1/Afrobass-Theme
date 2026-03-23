@@ -181,10 +181,13 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     <div class="ab-milestones ab-reveal">
       <?php
       $default_milestones = [
-        ['year'=>'2018','text'=>'<strong>Founded</strong> — First events with DJ Ecool (Davido\'s DJ) and DJ Tunez (Wizkid\'s DJ). Canada Tour with Afro B.'],
-        ['year'=>'2022','text'=>'<strong>Scale-Up</strong> — Teni in Toronto, She\'s Afrique, Pop w/ Mayorkun. Multiple sold-out venues.'],
-        ['year'=>'2023','text'=>'<strong>Blaq Bonez Toronto</strong> — El Mocambo 500 sold out. CP24 interview. WSTRN Concert at The Opera House, 900 sold out.'],
-        ['year'=>'2025','text'=>'<strong>Afrobass Music Festival</strong> — Queen Elizabeth Theatre, 2,300 cap. Headliners: Oxlade, Victony, DJ Tunez.'],
+        ['year'=>'2018','text'=>'<strong>Founded</strong> — DJ Ecool Tour (3 cities), Afro B Tour (4 cities).'],
+        ['year'=>'2019','text'=>'<strong>Growth</strong> — Teni the Entertainer (Toronto Concert), Falz the Bad Guy (Ottawa Concert), Juls Baby.'],
+        ['year'=>'2021','text'=>'<strong>L.A.X</strong> — Toronto Concert.'],
+        ['year'=>'2022','text'=>'<strong>Rolling Loud After Party</strong> — Wizkid &amp; DJ Tunez, Toronto.'],
+        ['year'=>'2023','text'=>'<strong>Blaqbonez Tour</strong> (8 cities), WSTRN Toronto Concert, Ayra Starr Toronto After Party.'],
+        ['year'=>'2024','text'=>'<strong>Oxlade Tour</strong> (3 cities), Skyla Tylaa Tour (4 cities), DJ Obi Toronto Event.'],
+        ['year'=>'2025','text'=>'<strong>Skyla Tylaa Tour</strong> (5 cities), DJ Kaywise Tour (8 bookings), Dope Caesar Tour (10 cities), DJ Tunez Blackout Tour (3 cities), Odeal Toronto Concert After Party.'],
       ];
       $items = !empty($milestones) ? $milestones : $default_milestones;
       foreach ($items as $ms): ?>
@@ -271,9 +274,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     else:
       // Fallback placeholder cards if no events yet
       $placeholders = [
-        ['type'=>'Tour','date'=>'Aug 2025 · Toronto, ON','name'=>'DJ Spinall — Motion Tour','venue'=>'Caribana Weekend','link'=>'#','link_text'=>'Get Tickets →','bg'=>'linear-gradient(135deg,#1a0500,#3d1000)'],
-        ['type'=>'Festival','date'=>'Sept 2025 · Toronto, ON','name'=>'Afrobass Music Festival','venue'=>'Queen Elizabeth Theatre · 2,300 Cap.','link'=>'#','link_text'=>'Tickets Coming Soon →','bg'=>'linear-gradient(135deg,#0a0510,#1a0030)'],
-        ['type'=>'Tour','date'=>'Fall 2025 · Canada','name'=>'National Afrobeats Tour','venue'=>'Toronto · Vancouver · Ottawa','link'=>'#','link_text'=>'Announcement Soon →','bg'=>'linear-gradient(135deg,#001a10,#003525)'],
+        ['type'=>'Tour','date'=>'Apr 24, 2026 · Toronto, ON','name'=>'DJ Spinall Live in Toronto','venue'=>'Noir · 11 Polson Street','link'=>'https://www.ticketgateway.com/event/view/-k--groove-toronto-w--dj-spinall--afrobeats--amapiano--house-music','link_text'=>'Get Tickets →','bg'=>'linear-gradient(135deg,#1a0500,#3d1000)'],
       ];
       foreach ($placeholders as $p): ?>
         <div class="ab-event-card ab-reveal">
@@ -355,7 +356,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     $recaps = new WP_Query(['post_type'=>'ab_recap','posts_per_page'=>3,'orderby'=>'date','order'=>'DESC']);
     $recap_count = 0;
     $default_recaps = [
-      ['event'=>'Blaq Bonez Live — Toronto','detail'=>'El Mocambo · 500 Sold Out · CP24 Featured','year'=>'May 2023','bg'=>'linear-gradient(135deg,#1a0500,#3d1000)','featured'=>true],
+      ['event'=>'Blaqbonez Live — Toronto','detail'=>'El Mocambo · 500 Sold Out','year'=>'May 2023','bg'=>'linear-gradient(135deg,#1a0500,#3d1000)','featured'=>true],
       ['event'=>'WSTRN Concert','detail'=>'Opera House · 900 Sold Out','year'=>'Oct 2023','bg'=>'linear-gradient(135deg,#00101a,#003040)','featured'=>false],
       ['event'=>'Teni the Entertainer','detail'=>'Toronto · Sold Out','year'=>'2022','bg'=>'linear-gradient(135deg,#0d0018,#2a0050)','featured'=>false],
     ];
@@ -558,7 +559,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
           <div class="ab-bf-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 10 C3 6.13 6.13 3 10 3 C13.87 3 17 6.13 17 10 C17 13.87 13.87 17 10 17" stroke="#FF4500" stroke-width="1.5"/><path d="M6 10 L10 10 L10 15" stroke="#FF4500" stroke-width="1.5" stroke-linecap="round"/></svg></div>
           <div>
             <div class="ab-bf-title">Trusted Network</div>
-            <div class="ab-bf-desc">Media coverage (CP24), established venue relationships, and a loyal 5,000+ subscriber fanbase.</div>
+            <div class="ab-bf-desc">Established venue relationships across Canada and a loyal fanbase that shows up every single time.</div>
           </div>
         </div>
       </div>

@@ -63,8 +63,6 @@ $socials = [
 
     <div class="ab-footer-col">
       <h4>Contact</h4>
-      <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a>
-      <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9]/', '', $phone)); ?>"><?php echo esc_html($phone); ?></a>
       <a href="<?php echo esc_url(home_url('/book-talent')); ?>">Talent Booking</a>
       <a href="<?php echo esc_url(home_url('/contact')); ?>">Invest / Sponsorship</a>
       <a href="<?php echo esc_url(home_url('/contact')); ?>">Brand Partnerships</a>
