@@ -224,19 +224,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '13.0.0'
+        '14.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '13.0.0'
+        '14.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '13.0.0',
+        '14.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -530,7 +530,7 @@ function ab_force_page_templates($template) {
     $slug = get_post_field('post_name', get_queried_object_id());
     $map  = [
         'events'      => 'page-events.php',
-        'tours'       => 'page-events.php',
+        'tours'       => 'page-tours.php',
         'about'       => 'page-about.php',
         'our-story'   => 'page-about.php',
         'contact'     => 'page-contact.php',
