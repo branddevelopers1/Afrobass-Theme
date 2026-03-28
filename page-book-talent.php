@@ -11,7 +11,8 @@ $email = ab_setting('ab_email') ?: 'contact@afrobass.com';
 $artists_query = new WP_Query([
   'post_type'      => 'ab_artist',
   'posts_per_page' => -1,
-  'orderby'        => 'menu_order',
+  'meta_key'       => 'ab_artist_order',
+  'orderby'        => 'meta_value_num',
   'order'          => 'ASC',
 ]);
 $has_artists = $artists_query->have_posts();
@@ -247,11 +248,15 @@ $fallback_artists = [
 
     <?php if ($has_artists):
       while ($artists_query->have_posts()): $artists_query->the_post();
-        $genre    = get_field('ab_artist_genre')  ?: '';
-        $origin   = get_field('ab_artist_origin') ?: '';
-        $role     = get_field('ab_artist_role')   ?: 'Artist';
-        $initials = implode('', array_map(fn($w) => strtoupper($w[0]), array_filter(explode(' ', get_the_title()))));
-        $initials = substr($initials, 0, 2);
+        $genre     = get_field('ab_artist_genre')    ?: '';
+        $origin    = get_field('ab_artist_origin')   ?: '';
+        $role      = get_field('ab_artist_role')     ?: 'Artist';
+        $available = get_field('ab_artist_available');
+        $note      = get_field('ab_artist_booking_note') ?: '';
+        $spotify   = get_field('ab_artist_spotify')  ?: '';
+        $instagram = get_field('ab_artist_instagram') ?: '';
+        $words     = array_filter(explode(' ', get_the_title()));
+        $initials  = substr(implode('', array_map(fn($w) => strtoupper($w[0]), $words)), 0, 2);
     ?>
       <a href="<?php the_permalink(); ?>" class="ab-bt-artist-card ab-reveal">
         <div class="ab-bt-artist-img-wrap">
@@ -355,7 +360,9 @@ $fallback_artists = [
             <option value="">Select from our roster or enter below...</option>
             <?php if ($has_artists):
               $artists_query->rewind_posts();
-              while ($artists_query->have_posts()): $artists_query->the_post(); ?>
+              while ($artists_query->have_posts()): $artists_query->the_post();
+                $avail = get_field('ab_artist_available');
+                if ($avail === false) continue; ?>
                 <option value="<?php the_title(); ?>"><?php the_title(); ?></option>
               <?php endwhile; wp_reset_postdata();
             else:

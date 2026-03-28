@@ -314,14 +314,24 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
   <div class="ab-flyers-marquee ab-reveal">
     <div class="ab-flyers-track">
       <?php
-      // Build flyer list from past events CPT + fallback to known WP image URLs
-      $flyer_events = new WP_Query(['post_type'=>'ab_event','posts_per_page'=>12,'meta_query'=>[['key'=>'ab_event_status','value'=>'past']]]);
+      // Build flyer list from past events + past tours + fallback known flyers
       $flyer_items = [];
 
+      // Past events
+      $flyer_events = new WP_Query(['post_type'=>'ab_event','posts_per_page'=>20,'meta_query'=>[['key'=>'ab_event_status','value'=>'past']]]);
       if ($flyer_events->have_posts()):
         while ($flyer_events->have_posts()): $flyer_events->the_post();
           $f = get_field('ab_event_flyer') ?: [];
-          $flyer_items[] = ['url' => !empty($f['url']) ? $f['url'] : '', 'name' => get_the_title(), 'bg' => '#1a0800'];
+          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#1a0800'];
+        endwhile; wp_reset_postdata();
+      endif;
+
+      // Past tours
+      $flyer_tours = new WP_Query(['post_type'=>'ab_tour','posts_per_page'=>20,'meta_query'=>[['relation'=>'OR',['key'=>'ab_tour_status','value'=>'past'],['key'=>'ab_tour_status','value'=>'completed']]]]);
+      if ($flyer_tours->have_posts()):
+        while ($flyer_tours->have_posts()): $flyer_tours->the_post();
+          $f = get_field('ab_tour_flyer') ?: [];
+          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#001a10'];
         endwhile; wp_reset_postdata();
       endif;
 

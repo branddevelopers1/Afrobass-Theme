@@ -224,19 +224,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '14.0.0'
+        '15.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '14.0.0'
+        '15.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '14.0.0',
+        '15.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -407,6 +407,26 @@ function ab_register_acf_fields() {
         ],
         'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_recap'] ]],
     ]);
+
+    /* ── Talents ── */
+    acf_add_local_field_group([
+        'key'    => 'group_ab_artist',
+        'title'  => 'Talent Details',
+        'fields' => [
+            ['key'=>'field_ab_artist_role',       'label'=>'Role / Type',       'name'=>'ab_artist_role',
+             'type'=>'select','choices'=>['Headliner'=>'Headliner','Featured Artist'=>'Featured Artist','Supporting Act'=>'Supporting Act','DJ Set'=>'DJ Set','Special Guest'=>'Special Guest'],'default_value'=>'Featured Artist'],
+            ['key'=>'field_ab_artist_genre',      'label'=>'Genre',             'name'=>'ab_artist_genre',      'type'=>'text', 'placeholder'=>'Afrobeats · Live'],
+            ['key'=>'field_ab_artist_origin',     'label'=>'Origin / Country',  'name'=>'ab_artist_origin',     'type'=>'text', 'placeholder'=>'Lagos, Nigeria'],
+            ['key'=>'field_ab_artist_bio',        'label'=>'Short Bio',         'name'=>'ab_artist_bio',        'type'=>'textarea','rows'=>3],
+            ['key'=>'field_ab_artist_spotify',    'label'=>'Spotify URL',       'name'=>'ab_artist_spotify',    'type'=>'url'],
+            ['key'=>'field_ab_artist_instagram',  'label'=>'Instagram URL',     'name'=>'ab_artist_instagram',  'type'=>'url'],
+            ['key'=>'field_ab_artist_youtube',    'label'=>'YouTube URL',       'name'=>'ab_artist_youtube',    'type'=>'url'],
+            ['key'=>'field_ab_artist_order',      'label'=>'Display Order',     'name'=>'ab_artist_order',      'type'=>'number','default_value'=>10,'instructions'=>'Lower number = shown first'],
+            ['key'=>'field_ab_artist_available',  'label'=>'Available for Booking','name'=>'ab_artist_available','type'=>'true_false','default_value'=>1],
+            ['key'=>'field_ab_artist_booking_note','label'=>'Booking Note',    'name'=>'ab_artist_booking_note','type'=>'text','placeholder'=>'e.g. International dates only'],
+        ],
+        'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_artist'] ]],
+    ]);
 }
 add_action('acf/init', 'ab_register_acf_fields');
 
@@ -421,6 +441,26 @@ function ab_register_cpt_recaps() {
     ]);
 }
 add_action('init', 'ab_register_cpt_recaps');
+
+/* ─── CPT: TALENTS ─── */
+function ab_register_cpt_talents() {
+    register_post_type('ab_artist', [
+        'labels' => [
+            'name'          => 'Talents',
+            'singular_name' => 'Talent',
+            'add_new_item'  => 'Add New Talent',
+            'edit_item'     => 'Edit Talent',
+            'menu_name'     => 'Talents',
+        ],
+        'public'       => true,
+        'has_archive'  => false,
+        'rewrite'      => ['slug' => 'talent', 'with_front' => false],
+        'supports'     => ['title', 'thumbnail', 'editor', 'excerpt', 'page-attributes'],
+        'menu_icon'    => 'dashicons-microphone',
+        'show_in_rest' => true,
+    ]);
+}
+add_action('init', 'ab_register_cpt_talents');
 
 /* ============================================================
    BOOKING FORM AJAX HANDLER
