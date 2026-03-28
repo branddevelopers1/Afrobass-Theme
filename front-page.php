@@ -218,16 +218,14 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     <?php
     $upcoming = new WP_Query([
       'post_type'      => ['ab_event','ab_tour'],
-      'posts_per_page' => 3,
+      'posts_per_page' => 6,
+      'orderby'        => 'date',
+      'order'          => 'DESC',
       'meta_query'     => [
         'relation' => 'OR',
         ['key'=>'ab_event_status','value'=>['upcoming','on_sale'],'compare'=>'IN'],
         ['key'=>'ab_tour_status', 'value'=>['upcoming','on_sale'],'compare'=>'IN'],
-        ['key'=>'ab_event_status','compare'=>'NOT EXISTS'],
-        ['key'=>'ab_event_status','value'=>'','compare'=>'='],
       ],
-      'orderby' => 'date',
-      'order'   => 'DESC',
     ]);
 
     if ($upcoming->have_posts()):
