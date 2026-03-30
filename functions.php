@@ -224,19 +224,19 @@ function ab_enqueue_assets() {
         'ab-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [],
-        '15.0.0'
+        '18.0.0'
     );
     wp_enqueue_style(
         'ab-style',
         get_stylesheet_uri(),
         ['ab-main'],
-        '15.0.0'
+        '18.0.0'
     );
     wp_enqueue_script(
         'ab-main',
         get_template_directory_uri() . '/assets/js/main.js',
         [],
-        '15.0.0',
+        '18.0.0',
         true
     );
     // Pass AJAX data to JS
@@ -322,6 +322,7 @@ function ab_register_acf_fields() {
             ['key'=>'field_ab_event_flyer',      'label'=>'Event Flyer',       'name'=>'ab_event_flyer',      'type'=>'image',        'return_format'=>'array', 'preview_size'=>'ab-event-thumb'],
             ['key'=>'field_ab_event_capacity',   'label'=>'Venue Capacity',    'name'=>'ab_event_capacity',   'type'=>'text',         'placeholder'=>'2,300'],
             ['key'=>'field_ab_event_artists',    'label'=>'Artists / Headliners','name'=>'ab_event_artists',  'type'=>'textarea',     'rows'=>3],
+            ['key'=>'field_ab_event_recap_url',  'label'=>'Recap Video URL (Past Events)', 'name'=>'ab_event_recap_url', 'type'=>'url', 'instructions'=>'Add YouTube or video link once the event has taken place'],
         ],
         'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_event'] ]],
     ]);
@@ -575,6 +576,8 @@ function ab_force_page_templates($template) {
         'our-story'   => 'page-about.php',
         'contact'     => 'page-contact.php',
         'book-talent' => 'page-book-talent.php',
+        'recaps'      => 'page-recaps.php',
+        'videos'      => 'page-recaps.php',
     ];
 
     if (isset($map[$slug])) {

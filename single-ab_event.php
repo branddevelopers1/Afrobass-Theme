@@ -8,8 +8,10 @@ $time     = get_field('ab_event_time');
 $venue    = get_field('ab_event_venue');
 $city     = get_field('ab_event_city');
 $type     = get_field('ab_event_type') ?: 'Concert / Show';
-$ticket   = get_field('ab_event_ticket_url');
-$status   = get_field('ab_event_status');
+$ticket      = get_field('ab_event_ticket_url');
+$recap_video = get_field('ab_event_recap_url') ?: '';
+$status      = get_field('ab_event_status');
+$is_past     = ($status === 'past' || $status === 'sold_out');
 $flyer    = get_field('ab_event_flyer');
 $capacity = get_field('ab_event_capacity');
 $artists  = get_field('ab_event_artists');
@@ -84,7 +86,20 @@ $disp_date = $date ? date('F j, Y', strtotime($date)) : '';
         <div class="ab-single-desc"><?php the_content(); ?></div>
       <?php endif; ?>
 
-      <?php if ($ticket && $status !== 'sold_out'): ?>
+      <?php if ($is_past): ?>
+        <?php if ($recap_video): ?>
+          <a href="<?php echo esc_url($recap_video); ?>"
+             class="ab-single-ticket-btn"
+             target="_blank" rel="noopener"
+             style="background:#1a1a1a;color:rgba(255,255,255,0.7);">
+            Watch Recap Video →
+          </a>
+        <?php else: ?>
+          <span class="ab-single-ticket-btn" style="background:#1a1a1a;cursor:default;display:inline-block;opacity:0.5;">
+            Recap Video Coming Soon
+          </span>
+        <?php endif; ?>
+      <?php elseif ($ticket): ?>
         <a href="<?php echo esc_url($ticket); ?>"
            class="ab-single-ticket-btn"
            target="_blank" rel="noopener">
@@ -94,8 +109,8 @@ $disp_date = $date ? date('F j, Y', strtotime($date)) : '';
         <span class="ab-single-ticket-btn" style="background:#333;cursor:default;display:inline-block;opacity:0.6;">
           Sold Out
         </span>
-      <?php elseif (!$ticket): ?>
-        <span class="ab-single-ticket-btn" style="background:#222;cursor:default;display:inline-block;opacity:0.6;">
+      <?php else: ?>
+        <span class="ab-single-ticket-btn" style="background:#222;cursor:default;display:inline-block;opacity:0.5;">
           Tickets Coming Soon
         </span>
       <?php endif; ?>

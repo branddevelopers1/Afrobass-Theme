@@ -320,7 +320,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
       if ($flyer_events->have_posts()):
         while ($flyer_events->have_posts()): $flyer_events->the_post();
           $f = get_field('ab_event_flyer') ?: [];
-          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#1a0800'];
+          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#1a0800','link'=>get_permalink()];
         endwhile; wp_reset_postdata();
       endif;
 
@@ -329,7 +329,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
       if ($flyer_tours->have_posts()):
         while ($flyer_tours->have_posts()): $flyer_tours->the_post();
           $f = get_field('ab_tour_flyer') ?: [];
-          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#001a10'];
+          if (!empty($f['url'])) $flyer_items[] = ['url'=>$f['url'],'name'=>get_the_title(),'bg'=>'#001a10','link'=>get_permalink()];
         endwhile; wp_reset_postdata();
       endif;
 
@@ -359,7 +359,12 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
       // Duplicate for seamless loop
       $all_flyers = array_merge($flyer_items, $flyer_items);
       foreach ($all_flyers as $flyer): ?>
-        <div class="ab-flyer-card">
+        <?php
+          $flyer_link = !empty($flyer['link']) ? $flyer['link'] : home_url('/events');
+          $flyer_tag  = !empty($flyer['link']) ? 'a' : 'div';
+          $flyer_href = !empty($flyer['link']) ? ' href="'.esc_url($flyer['link']).'" target="_blank" rel="noopener"' : '';
+        ?>
+        <<?php echo $flyer_tag; ?> class="ab-flyer-card"<?php echo $flyer_href; ?>>
           <?php if (!empty($flyer['url'])): ?>
             <img src="<?php echo esc_url($flyer['url']); ?>" alt="<?php echo esc_attr($flyer['name']); ?>" loading="lazy"
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
@@ -369,7 +374,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
             <span class="ab-flyer-ph-name"><?php echo esc_html($flyer['name']); ?></span>
           </div>
           <div class="ab-flyer-overlay"><span><?php echo esc_html($flyer['name']); ?></span></div>
-        </div>
+        </<?php echo $flyer_tag; ?>>
       <?php endforeach; ?>
     </div>
   </div>
@@ -414,8 +419,16 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
     ?>
         <div class="<?php echo esc_attr($card_class); ?>" <?php echo $data_video; ?> style="cursor:pointer;">
           <div class="<?php echo esc_attr($thumb_class); ?>">
-            <div class="ab-recap-bg" style="<?php echo !empty($thumb['url']) ? 'background:url('.esc_url($thumb['url']).') center/cover;' : 'background:linear-gradient(135deg,#1a0500,#2a0800);'; ?>">
-              <?php if (empty($thumb['url'])): ?>
+            <?php
+              $bg_url = '';
+              if (!empty($thumb['url'])) {
+                $bg_url = $thumb['url'];
+              } elseif ($embed) {
+                $bg_url = 'https://img.youtube.com/vi/' . $embed . '/maxresdefault.jpg';
+              }
+            ?>
+            <div class="ab-recap-bg" style="<?php echo $bg_url ? 'background:url('.esc_url($bg_url).') center/cover;' : 'background:linear-gradient(135deg,#1a0500,#2a0800);'; ?>">
+              <?php if (!$bg_url): ?>
                 <div class="ab-recap-bg-text"><?php echo esc_html($ev_name); ?></div>
               <?php endif; ?>
             </div>
