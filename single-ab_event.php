@@ -88,12 +88,32 @@ $disp_date = $date ? date('F j, Y', strtotime($date)) : '';
 
       <?php if ($is_past): ?>
         <?php if ($recap_video): ?>
-          <a href="<?php echo esc_url($recap_video); ?>"
-             class="ab-single-ticket-btn"
-             target="_blank" rel="noopener"
-             style="background:#1a1a1a;color:rgba(255,255,255,0.7);">
-            Watch Recap Video →
-          </a>
+          <?php
+          // Extract video ID for embed
+          preg_match('/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/', $recap_video, $rv_m);
+          $recap_vid_id = isset($rv_m[1]) ? $rv_m[1] : '';
+          ?>
+          <?php if ($recap_vid_id): ?>
+            <div style="margin-bottom:16px;">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Event Recap</div>
+              <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:2px;background:#111;">
+                <iframe
+                  src="https://www.youtube.com/embed/<?php echo esc_attr($recap_vid_id); ?>?rel=0"
+                  style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy">
+                </iframe>
+              </div>
+            </div>
+          <?php else: ?>
+            <a href="<?php echo esc_url($recap_video); ?>"
+               class="ab-single-ticket-btn"
+               target="_blank" rel="noopener"
+               style="background:#1a1a1a;color:rgba(255,255,255,0.7);">
+              Watch Recap Video →
+            </a>
+          <?php endif; ?>
         <?php else: ?>
           <span class="ab-single-ticket-btn" style="background:#1a1a1a;cursor:default;display:inline-block;opacity:0.5;">
             Recap Video Coming Soon

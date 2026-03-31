@@ -420,14 +420,20 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
         <div class="<?php echo esc_attr($card_class); ?>" <?php echo $data_video; ?> style="cursor:pointer;">
           <div class="<?php echo esc_attr($thumb_class); ?>">
             <?php
+              // Extract raw video ID from the embed URL or original YT URL
+              $vid_id = '';
+              if (!empty($yt)) {
+                preg_match('/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/', $yt, $yt_m);
+                $vid_id = isset($yt_m[1]) ? $yt_m[1] : '';
+              }
               $bg_url = '';
               if (!empty($thumb['url'])) {
                 $bg_url = $thumb['url'];
-              } elseif ($embed) {
-                $bg_url = 'https://img.youtube.com/vi/' . $embed . '/maxresdefault.jpg';
+              } elseif ($vid_id) {
+                $bg_url = 'https://img.youtube.com/vi/' . $vid_id . '/maxresdefault.jpg';
               }
             ?>
-            <div class="ab-recap-bg" style="<?php echo $bg_url ? 'background:url('.esc_url($bg_url).') center/cover;' : 'background:linear-gradient(135deg,#1a0500,#2a0800);'; ?>">
+            <div class="ab-recap-bg" style="<?php echo $bg_url ? 'background:url('.esc_url($bg_url).') center/cover no-repeat;background-size:cover;' : 'background:linear-gradient(135deg,#1a0500,#2a0800);'; ?>">
               <?php if (!$bg_url): ?>
                 <div class="ab-recap-bg-text"><?php echo esc_html($ev_name); ?></div>
               <?php endif; ?>
