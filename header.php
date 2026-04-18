@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
 <?php wp_head(); ?>
+
+<!-- Showpass SDK -->
+<script type="text/javascript">
+(function(window, document, src) {
+  var config = window.__shwps;
+  if (typeof config === 'undefined') {
+    config = function() { config.c(arguments); };
+    config.q = [];
+    config.c = function(args) { config.q.push(args); };
+    window.__shwps = config;
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = src;
+    var x = document.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
+  }
+})(window, document, 'https://www.showpass.com/static/dist/sdk.js');
+</script>
 </head>
 <body <?php body_class('ab-site'); ?>>
 <?php wp_body_open(); ?>

@@ -7,7 +7,9 @@ $start   = get_field('ab_tour_start');
 $end     = get_field('ab_tour_end');
 $cities  = get_field('ab_tour_cities');
 $artist  = get_field('ab_tour_artist');
-$ticket  = get_field('ab_tour_ticket_url');
+$ticket        = get_field('ab_tour_ticket_url');
+$showpass_url  = get_field('ab_tour_showpass_url');
+$showpass_slug = ab_showpass_slug($showpass_url ?: '');
 $status  = get_field('ab_tour_status');
 $flyer   = get_field('ab_tour_flyer');
 $ds = $start ? date('F j', strtotime($start)) : '';
@@ -46,8 +48,13 @@ $de = $end   ? date('F j, Y', strtotime($end)) : ($start ? date('Y', strtotime($
       <?php if (get_the_content()): ?>
         <div class="ab-single-desc"><?php the_content(); ?></div>
       <?php endif; ?>
-      <?php if ($ticket && $status !== 'past'): ?>
-        <a href="<?php echo esc_url($ticket); ?>" class="ab-single-ticket-btn" target="_blank" rel="noopener">Get Tickets →</a>
+      <?php if ($status !== 'past'): ?>
+        <?php if ($showpass_slug): ?>
+          <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($showpass_slug); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})"
+             class="ab-single-ticket-btn" style="border:none;cursor:pointer;">Get Tickets →</button>
+        <?php elseif ($ticket): ?>
+          <a href="<?php echo esc_url($ticket); ?>" class="ab-single-ticket-btn" target="_blank" rel="noopener">Get Tickets →</a>
+        <?php endif; ?>
       <?php endif; ?>
       <div style="margin-top:40px;padding-top:32px;border-top:1px solid #1a1a1a;">
         <a href="<?php echo esc_url(home_url('/tours')); ?>" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);">← Back to Tours</a>

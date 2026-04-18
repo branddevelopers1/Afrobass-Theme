@@ -236,7 +236,9 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
         $venue   = $is_tour ? ''                               : get_field('ab_event_venue');
         $city    = $is_tour ? get_field('ab_tour_cities')      : get_field('ab_event_city');
         $type    = $is_tour ? 'Tour'                           : get_field('ab_event_type');
-        $ticket  = $is_tour ? get_field('ab_tour_ticket_url')  : get_field('ab_event_ticket_url');
+        $ticket       = $is_tour ? get_field('ab_tour_ticket_url')    : get_field('ab_event_ticket_url');
+        $showpass_url = $is_tour ? get_field('ab_tour_showpass_url')  : get_field('ab_event_showpass_url');
+        $showpass_slug = ab_showpass_slug($showpass_url ?: '');
         $status  = $is_tour ? get_field('ab_tour_status')      : get_field('ab_event_status');
         $flyer   = $is_tour ? get_field('ab_tour_flyer')       : get_field('ab_event_flyer');
         $display_date = ab_format_event_date($date);
@@ -262,9 +264,13 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
           <div class="ab-event-date"><?php echo esc_html($display_date); ?></div>
           <div class="ab-event-name"><?php the_title(); ?></div>
           <?php if ($venue): ?><div class="ab-event-venue"><?php echo esc_html($venue); ?></div><?php endif; ?>
-          <a href="<?php echo esc_url($link); ?>" class="ab-event-link" <?php if($ticket) echo 'target="_blank" rel="noopener"'; ?>>
-            <?php echo esc_html($link_text); ?>
-          </a>
+          <?php if ($showpass_slug && $status !== 'sold_out'): ?>
+            <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($showpass_slug); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})" class="ab-event-link" style="background:none;border:none;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left;">Get Tickets →</button>
+          <?php else: ?>
+            <a href="<?php echo esc_url($link); ?>" class="ab-event-link" <?php if($ticket) echo 'target="_blank" rel="noopener"'; ?>>
+              <?php echo esc_html($link_text); ?>
+            </a>
+          <?php endif; ?>
         </div>
       </div>
     <?php

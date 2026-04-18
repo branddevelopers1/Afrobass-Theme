@@ -322,7 +322,8 @@ function ab_register_acf_fields() {
             ['key'=>'field_ab_event_flyer',      'label'=>'Event Flyer',       'name'=>'ab_event_flyer',      'type'=>'image',        'return_format'=>'array', 'preview_size'=>'ab-event-thumb'],
             ['key'=>'field_ab_event_capacity',   'label'=>'Venue Capacity',    'name'=>'ab_event_capacity',   'type'=>'text',         'placeholder'=>'2,300'],
             ['key'=>'field_ab_event_artists',    'label'=>'Artists / Headliners','name'=>'ab_event_artists',  'type'=>'textarea',     'rows'=>3],
-            ['key'=>'field_ab_event_recap_url',  'label'=>'Recap Video URL (Past Events)', 'name'=>'ab_event_recap_url', 'type'=>'url', 'instructions'=>'Add YouTube or video link once the event has taken place'],
+            ['key'=>'field_ab_event_recap_url',    'label'=>'Recap Video URL (Past Events)', 'name'=>'ab_event_recap_url',    'type'=>'url', 'instructions'=>'Add YouTube or video link once the event has taken place'],
+            ['key'=>'field_ab_event_showpass_url', 'label'=>'Showpass Event URL',           'name'=>'ab_event_showpass_url', 'type'=>'url', 'placeholder'=>'https://www.showpass.com/your-event/', 'instructions'=>'Paste the full Showpass event URL to enable the in-page ticket widget'],
         ],
         'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_event'] ]],
     ]);
@@ -341,7 +342,8 @@ function ab_register_acf_fields() {
                 'choices'=>['upcoming'=>'Upcoming','on_sale'=>'On Sale Now','past'=>'Past Tour'],
                 'default_value'=>'upcoming'
             ],
-            ['key'=>'field_ab_tour_flyer',       'label'=>'Tour Poster / Flyer','name'=>'ab_tour_flyer',      'type'=>'image',        'return_format'=>'array', 'preview_size'=>'ab-event-thumb'],
+            ['key'=>'field_ab_tour_flyer',         'label'=>'Tour Poster / Flyer',  'name'=>'ab_tour_flyer',         'type'=>'image', 'return_format'=>'array', 'preview_size'=>'ab-event-thumb'],
+            ['key'=>'field_ab_tour_showpass_url',  'label'=>'Showpass Event URL',   'name'=>'ab_tour_showpass_url',  'type'=>'url',   'placeholder'=>'https://www.showpass.com/your-tour/', 'instructions'=>'Paste the full Showpass event URL to enable the in-page ticket widget'],
         ],
         'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_tour'] ]],
     ]);
@@ -552,6 +554,14 @@ function ab_format_event_date(string $date_str): string {
 function ab_is_upcoming(string $date_str): bool {
     if (!$date_str) return true;
     return strtotime($date_str) >= strtotime('today');
+}
+
+/** Extract Showpass event slug from a full Showpass URL */
+function ab_showpass_slug(string $url): string {
+    if (empty($url)) return '';
+    $path = trim(parse_url($url, PHP_URL_PATH) ?: '', '/');
+    $parts = array_filter(explode('/', $path));
+    return end($parts) ?: '';
 }
 
 /** Get YouTube embed URL from various YouTube URL formats */

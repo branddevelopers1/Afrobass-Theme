@@ -37,7 +37,9 @@ if ($featured_query->have_posts()) {
   $fe['status']      = get_field('ab_event_status');
   $fe['flyer']       = get_field('ab_event_flyer');
   $fe['artists']     = get_field('ab_event_artists');
-  $fe['capacity']    = get_field('ab_event_capacity');
+  $fe['capacity']      = get_field('ab_event_capacity');
+  $fe['showpass_url']  = get_field('ab_event_showpass_url');
+  $fe['showpass_slug'] = ab_showpass_slug($fe['showpass_url'] ?: '');
   $fe['month']       = $fe['date'] ? strtoupper(date('M', strtotime($fe['date']))) : '';
   $fe['day']         = $fe['date'] ? date('d', strtotime($fe['date'])) : '';
   $fe['year']        = $fe['date'] ? date('Y', strtotime($fe['date'])) : '';
@@ -145,7 +147,13 @@ $past_query = new WP_Query([
 
       <!-- CTA Buttons -->
       <div style="display:flex;flex-direction:column;gap:10px;" class="ab-reveal">
-        <?php if ($fe['ticket'] && $fe['status'] !== 'sold_out'): ?>
+        <?php if (!empty($fe['showpass_slug']) && $fe['status'] !== 'sold_out'): ?>
+          <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($fe['showpass_slug']); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})"
+             style="display:block;width:100%;background:#FF4500;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:20px 40px;border-radius:2px;text-align:center;border:none;cursor:pointer;transition:background 0.2s;"
+             onmouseover="this.style.background='#CC3600'" onmouseout="this.style.background='#FF4500'">
+            Buy Tickets Now →
+          </button>
+        <?php elseif ($fe['ticket'] && $fe['status'] !== 'sold_out'): ?>
           <a href="<?php echo esc_url($fe['ticket']); ?>" target="_blank" rel="noopener"
              style="display:block;background:#FF4500;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:20px 40px;border-radius:2px;text-align:center;text-decoration:none;transition:background 0.2s;"
              onmouseover="this.style.background='#CC3600'" onmouseout="this.style.background='#FF4500'">
@@ -194,7 +202,9 @@ $past_query = new WP_Query([
       $venue  = get_field('ab_event_venue');
       $city   = get_field('ab_event_city');
       $type   = get_field('ab_event_type') ?: 'Event';
-      $ticket = get_field('ab_event_ticket_url');
+      $ticket        = get_field('ab_event_ticket_url');
+      $showpass_url  = get_field('ab_event_showpass_url');
+      $showpass_slug = ab_showpass_slug($showpass_url ?: '');
       $status = get_field('ab_event_status');
       $flyer  = get_field('ab_event_flyer');
       $ddate  = $date ? date('M j, Y', strtotime($date)) : '';
@@ -220,10 +230,14 @@ $past_query = new WP_Query([
           <div class="ab-event-date"><?php echo esc_html($ddate); ?></div>
           <div class="ab-event-name"><?php the_title(); ?></div>
           <?php if ($venue): ?><div class="ab-event-venue"><?php echo esc_html($venue); ?></div><?php endif; ?>
-          <a href="<?php echo esc_url($link); ?>" class="ab-event-link"
-             <?php if($ticket) echo 'target="_blank" rel="noopener"'; ?>>
-            <?php echo esc_html($ltxt); ?>
-          </a>
+          <?php if ($showpass_slug && $status !== 'sold_out'): ?>
+            <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($showpass_slug); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})" class="ab-event-link" style="background:none;border:none;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left;">Get Tickets →</button>
+          <?php else: ?>
+            <a href="<?php echo esc_url($link); ?>" class="ab-event-link"
+               <?php if($ticket) echo 'target="_blank" rel="noopener"'; ?>>
+              <?php echo esc_html($ltxt); ?>
+            </a>
+          <?php endif; ?>
         </div>
       </div>
     <?php endwhile; wp_reset_postdata(); ?>

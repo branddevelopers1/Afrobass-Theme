@@ -8,8 +8,10 @@ $time     = get_field('ab_event_time');
 $venue    = get_field('ab_event_venue');
 $city     = get_field('ab_event_city');
 $type     = get_field('ab_event_type') ?: 'Concert / Show';
-$ticket      = get_field('ab_event_ticket_url');
-$recap_video = get_field('ab_event_recap_url') ?: '';
+$ticket        = get_field('ab_event_ticket_url');
+$showpass_url  = get_field('ab_event_showpass_url');
+$showpass_slug = ab_showpass_slug($showpass_url ?: '');
+$recap_video   = get_field('ab_event_recap_url') ?: '';
 $status      = get_field('ab_event_status');
 $is_past     = ($status === 'past' || $status === 'sold_out');
 $flyer    = get_field('ab_event_flyer');
@@ -119,6 +121,11 @@ $disp_date = $date ? date('F j, Y', strtotime($date)) : '';
             Recap Video Coming Soon
           </span>
         <?php endif; ?>
+      <?php elseif ($showpass_slug): ?>
+        <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($showpass_slug); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})"
+           class="ab-single-ticket-btn" style="border:none;cursor:pointer;">
+          Get Tickets →
+        </button>
       <?php elseif ($ticket): ?>
         <a href="<?php echo esc_url($ticket); ?>"
            class="ab-single-ticket-btn"
