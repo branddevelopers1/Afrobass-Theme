@@ -1,14 +1,16 @@
 <?php get_header(); the_post(); ?>
 <?php
-$start   = get_field('ab_tour_start');
-$end     = get_field('ab_tour_end');
-$cities  = ab_get_tour_cities();
+global $post;
+$post_id = $post->ID ?? 0;
+$start   = get_field('ab_tour_start', $post_id);
+$end     = get_field('ab_tour_end', $post_id);
+$cities  = ab_get_tour_cities($post_id);
 $city_list = !empty($cities) ? implode(', ', $cities) : '';
-$artist  = get_field('ab_tour_artist');
-$city_tickets = ab_get_tour_city_tickets();
-$ticket  = get_field('ab_tour_ticket_url');
-$status  = get_field('ab_tour_status');
-$flyer   = get_field('ab_tour_flyer');
+$artist  = get_field('ab_tour_artist', $post_id);
+$city_tickets = ab_get_tour_city_tickets($post_id);
+$ticket  = get_field('ab_tour_ticket_url', $post_id);
+$status  = get_field('ab_tour_status', $post_id);
+$flyer   = get_field('ab_tour_flyer', $post_id);
 $ds = $start ? date('F j', strtotime($start)) : '';
 $de = $end   ? date('F j, Y', strtotime($end)) : ($start ? date('Y', strtotime($start)) : '');
 ?>

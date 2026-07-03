@@ -2,15 +2,17 @@
 <?php
 if (!have_posts()) { get_footer(); exit; }
 the_post();
+global $post;
+$post_id = $post->ID;
 
-$start   = get_field('ab_tour_start');
-$end     = get_field('ab_tour_end');
-$cities  = ab_get_tour_cities();
+$start   = get_field('ab_tour_start', $post_id);
+$end     = get_field('ab_tour_end', $post_id);
+$cities  = ab_get_tour_cities($post_id);
 $city_list = !empty($cities) ? implode(', ', $cities) : '';
-$artist  = get_field('ab_tour_artist');
-$city_tickets  = ab_get_tour_city_tickets();
-$ticket        = get_field('ab_tour_ticket_url');
-$showpass_url  = get_field('ab_tour_showpass_url');
+$artist  = get_field('ab_tour_artist', $post_id);
+$city_tickets  = ab_get_tour_city_tickets($post_id);
+$ticket        = get_field('ab_tour_ticket_url', $post_id);
+$showpass_url  = get_field('ab_tour_showpass_url', $post_id);
 $showpass_slug = ab_showpass_slug($showpass_url ?: '');
 $status  = get_field('ab_tour_status');
 $flyer   = get_field('ab_tour_flyer');
