@@ -300,7 +300,11 @@ add_action('init', 'ab_register_cpt_tours');
 ============================================================ */
 function ab_get_tour_cities($post_id = null) {
     $post_id = $post_id ?: get_the_ID();
-    $raw = get_field('ab_tour_cities', $post_id);
+    $raw = '';
+
+    if (function_exists('get_field')) {
+        $raw = get_field('ab_tour_cities', $post_id);
+    }
 
     if (is_array($raw)) {
         return array_values(array_filter(array_map('trim', $raw)));
