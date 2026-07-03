@@ -5,9 +5,10 @@ the_post();
 
 $start   = get_field('ab_tour_start');
 $end     = get_field('ab_tour_end');
-$cities  = get_field('ab_tour_cities');
+$cities  = ab_get_tour_cities();
+$city_list = !empty($cities) ? implode(', ', $cities) : '';
 $artist  = get_field('ab_tour_artist');
-$city_tickets  = get_field('ab_tour_city_tickets');
+$city_tickets  = ab_get_tour_city_tickets();
 $ticket        = get_field('ab_tour_ticket_url');
 $showpass_url  = get_field('ab_tour_showpass_url');
 $showpass_slug = ab_showpass_slug($showpass_url ?: '');
@@ -42,8 +43,8 @@ $de = $end   ? date('F j, Y', strtotime($end)) : ($start ? date('Y', strtotime($
         <?php if ($ds): ?>
           <div class="ab-single-meta-item"><span class="ab-single-meta-key">Dates</span><span class="ab-single-meta-val"><?php echo esc_html($ds . ($de ? ' – ' . $de : '')); ?></span></div>
         <?php endif; ?>
-        <?php if ($cities): ?>
-          <div class="ab-single-meta-item"><span class="ab-single-meta-key">Cities</span><span class="ab-single-meta-val"><?php echo esc_html($cities); ?></span></div>
+        <?php if ($city_list): ?>
+          <div class="ab-single-meta-item"><span class="ab-single-meta-key">Cities</span><span class="ab-single-meta-val"><?php echo esc_html($city_list); ?></span></div>
         <?php endif; ?>
       </div>
       <?php if (get_the_content()): ?>

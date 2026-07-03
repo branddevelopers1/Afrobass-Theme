@@ -296,6 +296,136 @@ function ab_register_cpt_tours() {
 add_action('init', 'ab_register_cpt_tours');
 
 /* ============================================================
+   TOUR CITY HELPERS
+============================================================ */
+function ab_get_tour_cities($post_id = null) {
+    $post_id = $post_id ?: get_the_ID();
+    $raw = get_field('ab_tour_cities', $post_id);
+
+    if (is_array($raw)) {
+        return array_values(array_filter(array_map('trim', $raw)));
+    }
+
+    if (!is_string($raw)) {
+        return [];
+    }
+
+    $parts = preg_split('/\r\n|\r|\n|,/', $raw);
+    $cities = array_map('trim', $parts);
+    $cities = array_values(array_filter($cities));
+
+    return $cities;
+}
+
+function ab_get_tour_city_tickets($post_id = null) {
+    $post_id = $post_id ?: get_the_ID();
+
+    if ($post_id && function_exists('get_field')) {
+        $acf_value = get_field('ab_tour_city_tickets', $post_id);
+        if (!empty($acf_value)) {
+            return $acf_value;
+        }
+    }
+
+    $fallback = get_post_meta($post_id, 'ab_tour_city_tickets_data', true);
+    if (!empty($fallback)) {
+        if (is_string($fallback)) {
+            $decoded = json_decode($fallback, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        return $fallback;
+    }
+
+    return [];
+}
+
+function ab_register_tour_city_ticket_meta_box() {
+    add_meta_box(
+        'ab_tour_city_tickets_meta',
+        'City Ticket Links',
+        'ab_render_tour_city_ticket_meta_box',
+        'ab_tour',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes_ab_tour', 'ab_register_tour_city_ticket_meta_box');
+
+function ab_render_tour_city_ticket_meta_box($post) {
+    wp_nonce_field('ab_save_tour_city_tickets', 'ab_tour_city_tickets_nonce');
+
+    $rows = ab_get_tour_city_tickets($post->ID);
+    if (empty($rows)) {
+        $rows = [['city' => '', 'ticket_url' => '']];
+    }
+
+    echo '<div id="ab-tour-city-ticket-rows">';
+    foreach ($rows as $index => $row) {
+        $city = isset($row['city']) ? $row['city'] : '';
+        $ticket_url = isset($row['ticket_url']) ? $row['ticket_url'] : '';
+        echo '<div class="ab-tour-city-ticket-row" style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">';
+        echo '<input type="text" name="ab_tour_city_tickets_data['.$index.'][city]" value="'.esc_attr($city).'" placeholder="City" style="flex:1;" />';
+        echo '<input type="url" name="ab_tour_city_tickets_data['.$index.'][ticket_url]" value="'.esc_attr($ticket_url).'" placeholder="https://example.com/tickets" style="flex:2;" />';
+        echo '<button type="button" class="button ab-remove-tour-city-ticket-row">Remove</button>';
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '<p><button type="button" class="button" id="ab-add-tour-city-ticket-row">Add City Ticket</button></p>';
+    echo '<script>
+        (function(){
+            const container = document.getElementById("ab-tour-city-ticket-rows");
+            const addButton = document.getElementById("ab-add-tour-city-ticket-row");
+            if (!container || !addButton) return;
+            addButton.addEventListener("click", function(){
+                const rows = container.querySelectorAll(".ab-tour-city-ticket-row");
+                const index = rows.length;
+                const row = document.createElement("div");
+                row.className = "ab-tour-city-ticket-row";
+                row.style.display = "flex";
+                row.style.gap = "10px";
+                row.style.alignItems = "center";
+                row.style.marginBottom = "10px";
+                row.innerHTML = '<input type="text" name="ab_tour_city_tickets_data['+index+'][city]" value="" placeholder="City" style="flex:1;" /><input type="url" name="ab_tour_city_tickets_data['+index+'][ticket_url]" value="" placeholder="https://example.com/tickets" style="flex:2;" /><button type="button" class="button ab-remove-tour-city-ticket-row">Remove</button>';
+                container.appendChild(row);
+            });
+            container.addEventListener("click", function(e){
+                if (e.target.classList.contains("ab-remove-tour-city-ticket-row")) {
+                    e.target.closest(".ab-tour-city-ticket-row").remove();
+                }
+            });
+        })();
+    </script>';
+}
+
+function ab_save_tour_city_tickets_meta($post_id) {
+    if (!isset($_POST['ab_tour_city_tickets_nonce']) || !wp_verify_nonce($_POST['ab_tour_city_tickets_nonce'], 'ab_save_tour_city_tickets')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $rows = [];
+    if (!empty($_POST['ab_tour_city_tickets_data']) && is_array($_POST['ab_tour_city_tickets_data'])) {
+        foreach ($_POST['ab_tour_city_tickets_data'] as $row) {
+            $city = isset($row['city']) ? sanitize_text_field($row['city']) : '';
+            $ticket_url = isset($row['ticket_url']) ? esc_url_raw($row['ticket_url']) : '';
+            if ($city || $ticket_url) {
+                $rows[] = ['city' => $city, 'ticket_url' => $ticket_url];
+            }
+        }
+    }
+
+    update_post_meta($post_id, 'ab_tour_city_tickets_data', $rows);
+}
+add_action('save_post_ab_tour', 'ab_save_tour_city_tickets_meta');
+
+/* ============================================================
    ACF FIELD GROUPS
    Registered in code — no plugin UI needed for initial setup
 ============================================================ */
@@ -335,7 +465,7 @@ function ab_register_acf_fields() {
         'fields' => [
             ['key'=>'field_ab_tour_start',       'label'=>'Tour Start Date',   'name'=>'ab_tour_start',       'type'=>'date_picker',  'return_format'=>'Y-m-d'],
             ['key'=>'field_ab_tour_end',         'label'=>'Tour End Date',     'name'=>'ab_tour_end',         'type'=>'date_picker',  'return_format'=>'Y-m-d'],
-            ['key'=>'field_ab_tour_cities',      'label'=>'Cities',            'name'=>'ab_tour_cities',      'type'=>'text',         'placeholder'=>'Toronto · Vancouver · Ottawa'],
+            ['key'=>'field_ab_tour_cities',      'label'=>'Cities',            'name'=>'ab_tour_cities',      'type'=>'textarea',     'rows'=>3, 'placeholder'=>'Toronto, Vancouver, Ottawa', 'instructions'=>'Enter one city per line or separate them with commas.'],
             ['key'=>'field_ab_tour_artist',      'label'=>'Artist Name',       'name'=>'ab_tour_artist',      'type'=>'text'],
             [
                 'key' => 'field_ab_tour_city_tickets',
