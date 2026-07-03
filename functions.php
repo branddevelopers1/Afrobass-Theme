@@ -394,7 +394,7 @@ function ab_render_tour_city_ticket_meta_box($post) {
                 row.style.gap = "10px";
                 row.style.alignItems = "center";
                 row.style.marginBottom = "10px";
-                row.innerHTML = '<input type="text" name="ab_tour_city_tickets_data['+index+'][city]" value="" placeholder="City" style="flex:1;" /><input type="url" name="ab_tour_city_tickets_data['+index+'][ticket_url]" value="" placeholder="https://example.com/tickets" style="flex:2;" /><button type="button" class="button ab-remove-tour-city-ticket-row">Remove</button>';
+                row.innerHTML = `<input type="text" name="ab_tour_city_tickets_data[${index}][city]" value="" placeholder="City" style="flex:1;" /><input type="url" name="ab_tour_city_tickets_data[${index}][ticket_url]" value="" placeholder="https://example.com/tickets" style="flex:2;" /><button type="button" class="button ab-remove-tour-city-ticket-row">Remove</button>`;
                 container.appendChild(row);
             });
             container.addEventListener("click", function(e){
