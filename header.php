@@ -32,14 +32,14 @@
 <div id="ab-cursor"></div>
 <div id="ab-cursor-ring"></div>
 
-<!-- Page Loader (homepage only) -->
-<?php if (is_front_page()): ?>
+<!-- Page Loader (homepage only) - DISABLED -->
+<?php /* if (is_front_page()): ?>
 <div id="ab-loader" aria-hidden="true">
   <div id="ab-loader-logo">AFRO<span>BASS</span></div>
   <div id="ab-loader-bar-wrap"><div id="ab-loader-bar"></div></div>
   <div id="ab-loader-text">Loading</div>
 </div>
-<?php endif; ?>
+<?php endif; */ ?>
 
 <!-- Navigation -->
 <nav id="ab-nav" role="navigation" aria-label="Main navigation">

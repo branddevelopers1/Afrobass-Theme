@@ -34,8 +34,8 @@
     });
   }
 
-  /* ─── LOADER ─── */
-  const loader = document.getElementById('ab-loader');
+  /* ─── LOADER ─── DISABLED */
+  /* const loader = document.getElementById('ab-loader');
   if (loader) {
     window.addEventListener('load', () => {
       setTimeout(() => {
@@ -43,7 +43,7 @@
         setTimeout(() => { loader.style.display = 'none'; }, 1200);
       }, 2400);
     });
-  }
+  } */
 
   /* ─── NAV SCROLL ─── */
   const nav = document.getElementById('ab-nav');

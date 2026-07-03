@@ -337,6 +337,19 @@ function ab_register_acf_fields() {
             ['key'=>'field_ab_tour_end',         'label'=>'Tour End Date',     'name'=>'ab_tour_end',         'type'=>'date_picker',  'return_format'=>'Y-m-d'],
             ['key'=>'field_ab_tour_cities',      'label'=>'Cities',            'name'=>'ab_tour_cities',      'type'=>'text',         'placeholder'=>'Toronto · Vancouver · Ottawa'],
             ['key'=>'field_ab_tour_artist',      'label'=>'Artist Name',       'name'=>'ab_tour_artist',      'type'=>'text'],
+            [
+                'key' => 'field_ab_tour_city_tickets',
+                'label' => 'City Ticket Links',
+                'name' => 'ab_tour_city_tickets',
+                'type' => 'repeater',
+                'layout' => 'block',
+                'button_label' => 'Add City Ticket',
+                'instructions' => 'Add one row per city. Each row will show its own ticket link on the frontend.',
+                'sub_fields' => [
+                    ['key' => 'field_ab_tour_city_ticket_city', 'label' => 'City', 'name' => 'city', 'type' => 'text', 'placeholder' => 'Toronto'],
+                    ['key' => 'field_ab_tour_city_ticket_url', 'label' => 'Ticket URL', 'name' => 'ticket_url', 'type' => 'url', 'placeholder' => 'https://example.com/tickets']
+                ]
+            ],
             ['key'=>'field_ab_tour_ticket_url',  'label'=>'Ticket / Info URL', 'name'=>'ab_tour_ticket_url',  'type'=>'url'],
             ['key'=>'field_ab_tour_status',      'label'=>'Status',            'name'=>'ab_tour_status',      'type'=>'select',
                 'choices'=>['upcoming'=>'Upcoming','on_sale'=>'On Sale Now','past'=>'Past Tour'],

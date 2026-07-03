@@ -4,6 +4,7 @@ $start   = get_field('ab_tour_start');
 $end     = get_field('ab_tour_end');
 $cities  = get_field('ab_tour_cities');
 $artist  = get_field('ab_tour_artist');
+$city_tickets = get_field('ab_tour_city_tickets');
 $ticket  = get_field('ab_tour_ticket_url');
 $status  = get_field('ab_tour_status');
 $flyer   = get_field('ab_tour_flyer');
@@ -30,8 +31,23 @@ $de = $end   ? date('F j, Y', strtotime($end)) : ($start ? date('Y', strtotime($
         <?php if ($cities): ?><div class="ab-single-meta-item"><span class="ab-single-meta-key">Cities</span><span class="ab-single-meta-val"><?php echo esc_html($cities); ?></span></div><?php endif; ?>
       </div>
       <?php if (get_the_content()): ?><div class="ab-single-desc"><?php the_content(); ?></div><?php endif; ?>
-      <?php if ($ticket && $status !== 'past'): ?>
-        <a href="<?php echo esc_url($ticket); ?>" class="ab-single-ticket-btn" target="_blank" rel="noopener">Get Tickets →</a>
+      <?php if (!empty($city_tickets) && $status !== 'past'): ?>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;">
+          <?php foreach ($city_tickets as $city_ticket): ?>
+            <?php $city_name = $city_ticket['city'] ?? ''; $city_ticket_url = $city_ticket['ticket_url'] ?? ''; ?>
+            <?php if ($city_name && $city_ticket_url): ?>
+              <a href="<?php echo esc_url($city_ticket_url); ?>" class="ab-single-ticket-btn" target="_blank" rel="noopener noreferrer">
+                <?php echo esc_html($city_name); ?> Tickets →
+              </a>
+            <?php elseif ($city_name): ?>
+              <span class="ab-single-ticket-btn" style="background:#333;cursor:default;display:inline-block;opacity:0.7;">
+                <?php echo esc_html($city_name); ?> — Coming Soon
+              </span>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
+      <?php elseif ($ticket && $status !== 'past'): ?>
+        <a href="<?php echo esc_url($ticket); ?>" class="ab-single-ticket-btn" target="_blank" rel="noopener noreferrer">Get Tickets →</a>
       <?php endif; ?>
     </div>
   </section>
