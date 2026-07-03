@@ -299,7 +299,10 @@ add_action('init', 'ab_register_cpt_tours');
    TOUR CITY HELPERS
 ============================================================ */
 function ab_get_tour_cities($post_id = null) {
-    $post_id = $post_id ?: get_the_ID();
+    if (!$post_id) {
+        return [];
+    }
+    
     $raw = '';
 
     if (function_exists('get_field')) {
@@ -322,9 +325,11 @@ function ab_get_tour_cities($post_id = null) {
 }
 
 function ab_get_tour_city_tickets($post_id = null) {
-    $post_id = $post_id ?: get_the_ID();
+    if (!$post_id) {
+        return [];
+    }
 
-    if ($post_id && function_exists('get_field')) {
+    if (function_exists('get_field')) {
         $acf_value = get_field('ab_tour_city_tickets', $post_id);
         if (!empty($acf_value)) {
             return $acf_value;
