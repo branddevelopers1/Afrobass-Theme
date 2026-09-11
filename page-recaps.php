@@ -190,7 +190,7 @@ function ab_yt_embed($url) {
       <div class="ab-section-kicker ab-reveal">Relive the Experience</div>
       <h1 class="ab-page-title ab-reveal">Event Recaps<br><span style="color:var(--orange);">& Videos</span></h1>
       <p class="ab-reveal" style="font-size:16px;font-weight:300;color:rgba(255,255,255,0.4);line-height:1.8;max-width:480px;margin-top:16px;">
-        Watch highlights from Afrobass concerts, tours, and events across Canada. Add recap videos via WP Admin → Recaps → Add New.
+        Watch highlights from Afrobass concerts, tours, and events across Canada.
       </p>
     </div>
   </div>
