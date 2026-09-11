@@ -1,5 +1,3 @@
-<?php get_header(); ?>
-
 <?php
 // ACF Homepage fields
 $hero_line1  = get_field('ab_hero_headline') ?: 'We Bring';
