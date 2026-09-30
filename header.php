@@ -60,6 +60,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
   <ul class="ab-nav-links">
+    <li><a href="<?php echo esc_url(home_url('/home-page')); ?>">Home</a></li>
     <li><a href="<?php echo esc_url(home_url('/events')); ?>">Events</a></li>
     <li><a href="<?php echo esc_url(home_url('/tours')); ?>">Tours</a></li>
     <li><a href="<?php echo esc_url(home_url('/about')); ?>">Our Story</a></li>
@@ -79,6 +80,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- Mobile Nav -->
 <div id="ab-mobile-nav" role="navigation" aria-label="Mobile navigation">
+  <a href="<?php echo esc_url(home_url('/home-page')); ?>" class="ab-mobile-link">Home</a>
   <a href="<?php echo esc_url(home_url('/events')); ?>" class="ab-mobile-link">Events</a>
   <a href="<?php echo esc_url(home_url('/tours')); ?>" class="ab-mobile-link">Tours</a>
   <a href="<?php echo esc_url(home_url('/about')); ?>" class="ab-mobile-link">Our Story</a>

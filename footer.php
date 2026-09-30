@@ -48,6 +48,7 @@ $socials = [
 
     <div class="ab-footer-col">
       <h4>Company</h4>
+      <a href="<?php echo esc_url(home_url('/home-page')); ?>">Home Page</a>
       <a href="<?php echo esc_url(home_url('/about')); ?>">Our Story</a>
       <a href="<?php echo esc_url(home_url('/#services')); ?>">What We Do</a>
       <a href="<?php echo esc_url(home_url('/book-talent')); ?>">Book Talent</a>
