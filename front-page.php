@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 get_header();
 
-get_template_part( 'template-parts/homepage-content' );
+get_template_part( 'homepage-content' );
 
 get_footer();
