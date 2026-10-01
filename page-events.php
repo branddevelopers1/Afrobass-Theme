@@ -62,7 +62,13 @@ $upcoming_query = new WP_Query([
   'order'    => 'ASC',
 ]);
 
-$has_more_upcoming = $upcoming_query->have_posts();
+$has_more_upcoming  = $upcoming_query->have_posts();
+$upcoming_count     = (int) $upcoming_query->found_posts;
+// 1–2 upcoming cards get a modifier so they don't strand empty grid columns.
+$upcoming_grid_class = 'ab-events-grid';
+if ($upcoming_count > 0 && $upcoming_count <= 2) {
+  $upcoming_grid_class .= ' ab-events-grid--few ab-events-grid--count-' . $upcoming_count;
+}
 
 // Get past events
 $past_query = new WP_Query([
@@ -196,7 +202,7 @@ $past_query = new WP_Query([
       <div class="ab-section-title">Upcoming Events</div>
     </div>
   </div>
-  <div class="ab-events-grid">
+  <div class="<?php echo esc_attr($upcoming_grid_class); ?>">
     <?php while ($upcoming_query->have_posts()): $upcoming_query->the_post();
       $date   = get_field('ab_event_date');
       $venue  = get_field('ab_event_venue');

@@ -887,6 +887,26 @@ input, select, textarea { font-family: var(--font-body); }
 .ab-delay-4 { transition-delay: 0.4s; }
 
 /* ─── RESPONSIVE ─── */
+/* Sparse upcoming-events grid: 1–2 cards shouldn't stretch across all 3
+   columns or leave empty columns. Cap the columns to the card count at the
+   normal ~1/3 width, left-aligned. The 768px rule below still collapses to
+   a single full-width column on mobile. */
+.ab-events-grid--few {
+  grid-template-columns: repeat(var(--few-count, 1), minmax(0, 420px));
+  justify-content: start;
+  background: transparent;           /* no stray divider block behind empty space */
+  gap: 24px;                          /* real gap instead of the 2px line-fill */
+}
+.ab-events-grid--few .ab-event-card {
+  border: 1px solid var(--dark3);     /* keep the card edge the line used to imply */
+}
+.ab-events-grid--count-1 { --few-count: 1; }
+.ab-events-grid--count-2 { --few-count: 2; }
+
+@media (max-width: 900px) {
+  .ab-events-grid--few { grid-template-columns: 1fr; justify-content: stretch; }
+}
+
 @media (max-width: 1024px) {
   .ab-services-grid { grid-template-columns: 1fr 1fr; }
   .ab-booking-grid { grid-template-columns: 1fr; gap: 60px; }
