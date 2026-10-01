@@ -239,6 +239,17 @@ function ab_enqueue_assets() {
         '19.0.0',
         true
     );
+    // FirstIn ticketing widget (used by events that sell through FirstIn
+    // instead of Showpass). Loads site-wide; only does anything on pages
+    // that render a button carrying a data-firstin-event attribute.
+    wp_enqueue_script(
+        'firstin-widget',
+        'https://firstin.app/widget.js',
+        [],
+        null,
+        true
+    );
+
     // Pass AJAX data to JS
     wp_localize_script('ab-main', 'abAjax', [
         'ajaxurl' => admin_url('admin-ajax.php'),
@@ -463,6 +474,7 @@ function ab_register_acf_fields() {
             ['key'=>'field_ab_event_artists',    'label'=>'Artists / Headliners','name'=>'ab_event_artists',  'type'=>'textarea',     'rows'=>3],
             ['key'=>'field_ab_event_recap_url',    'label'=>'Recap Video URL (Past Events)', 'name'=>'ab_event_recap_url',    'type'=>'url', 'instructions'=>'Add YouTube or video link once the event has taken place'],
             ['key'=>'field_ab_event_showpass_url', 'label'=>'Showpass Event URL',           'name'=>'ab_event_showpass_url', 'type'=>'url', 'placeholder'=>'https://www.showpass.com/your-event/', 'instructions'=>'Paste the full Showpass event URL to enable the in-page ticket widget'],
+            ['key'=>'field_ab_event_firstin_id',   'label'=>'FirstIn Event ID',             'name'=>'ab_event_firstin_id',   'type'=>'text', 'placeholder'=>'cmun7qdgs028b01o4gn1z3mxu', 'instructions'=>'For events ticketed via FirstIn. Paste the FirstIn event ID (the value from data-firstin-event). If set, this overrides Showpass for this event.'],
         ],
         'location' => [[ ['param'=>'post_type','operator'=>'==','value'=>'ab_event'] ]],
     ]);
@@ -714,6 +726,29 @@ function ab_showpass_slug(string $url): string {
     $path = trim(parse_url($url, PHP_URL_PATH) ?: '', '/');
     $parts = array_filter(explode('/', $path));
     return end($parts) ?: '';
+}
+
+/**
+ * Render a FirstIn "buy tickets" button.
+ *
+ * @param string $event_id FirstIn event ID (data-firstin-event value).
+ * @param string $label    Button text.
+ * @param string $classes  CSS classes to apply to the <a>.
+ * @param string $styles   Optional inline styles.
+ * @return string          Button HTML (empty string if no event ID).
+ */
+function ab_firstin_button(string $event_id, string $label = 'Get Tickets →', string $classes = '', string $styles = ''): string {
+    $event_id = trim($event_id);
+    if ($event_id === '') return '';
+    $fallback = 'https://firstin.app/events/' . rawurlencode($event_id);
+    return sprintf(
+        '<a href="%1$s" class="%2$s" data-firstin-event="%3$s" data-firstin-theme="system" target="_blank" rel="noopener"%4$s>%5$s</a>',
+        esc_url($fallback),
+        esc_attr($classes),
+        esc_attr($event_id),
+        $styles ? ' style="' . esc_attr($styles) . '"' : '',
+        esc_html($label)
+    );
 }
 
 /** Get YouTube embed URL from various YouTube URL formats */

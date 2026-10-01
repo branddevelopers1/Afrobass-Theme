@@ -51,7 +51,6 @@
   </a>
 
   <ul class="ab-nav-links">
-    <li><a href="<?php echo esc_url(home_url('/home-page')); ?>">Home</a></li>
     <li><a href="<?php echo esc_url(home_url('/events')); ?>">Events</a></li>
     <li><a href="<?php echo esc_url(home_url('/tours')); ?>">Tours</a></li>
     <li><a href="<?php echo esc_url(home_url('/about')); ?>">Our Story</a></li>

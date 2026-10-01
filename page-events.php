@@ -58,6 +58,7 @@ while ($upcoming_query->have_posts()): $upcoming_query->the_post();
   $fe['capacity']      = get_field('ab_event_capacity');
   $fe['showpass_url']  = get_field('ab_event_showpass_url');
   $fe['showpass_slug'] = ab_showpass_slug($fe['showpass_url'] ?: '');
+  $fe['firstin_id']    = get_field('ab_event_firstin_id') ?: '';
   $fe['month']         = $fe['date'] ? strtoupper(date('M', strtotime($fe['date']))) : '';
   $fe['day']           = $fe['date'] ? date('d', strtotime($fe['date'])) : '';
   $fe['year']          = $fe['date'] ? date('Y', strtotime($fe['date'])) : '';
@@ -141,7 +142,14 @@ while ($upcoming_query->have_posts()): $upcoming_query->the_post();
 
       <!-- CTA Buttons -->
       <div style="display:flex;flex-direction:column;gap:10px;" class="ab-reveal">
-        <?php if (!empty($fe['showpass_slug']) && $fe['status'] !== 'sold_out'): ?>
+        <?php if (!empty($fe['firstin_id']) && $fe['status'] !== 'sold_out'): ?>
+          <?php echo ab_firstin_button(
+            $fe['firstin_id'],
+            'Buy Tickets Now →',
+            '',
+            "display:block;width:100%;background:#FF4500;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:20px 40px;border-radius:2px;text-align:center;text-decoration:none;"
+          ); ?>
+        <?php elseif (!empty($fe['showpass_slug']) && $fe['status'] !== 'sold_out'): ?>
           <button onclick="showpass.tickets.eventPurchaseWidget('<?php echo esc_js($fe['showpass_slug']); ?>', {'theme-primary': '#FF4500', 'keep-shopping': false})"
              style="display:block;width:100%;background:#FF4500;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:20px 40px;border-radius:2px;text-align:center;border:none;cursor:pointer;transition:background 0.2s;"
              onmouseover="this.style.background='#CC3600'" onmouseout="this.style.background='#FF4500'">
