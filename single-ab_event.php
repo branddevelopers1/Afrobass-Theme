@@ -26,9 +26,15 @@ $disp_date = $date ? date('F j, Y', strtotime($date)) : '';
     <!-- Flyer -->
     <div class="ab-single-flyer ab-reveal">
       <?php if (!empty($flyer['url'])): ?>
-        <img src="<?php echo esc_url($flyer['sizes']['ab-event-thumb'] ?? $flyer['url']); ?>"
+        <?php
+          // Use a large, UNCROPPED size so the whole flyer shows (the
+          // 'ab-event-thumb' size is a hard 800×600 crop that slices tall
+          // flyers). Prefer the WP 'large' size, fall back to full.
+          $flyer_src = $flyer['sizes']['large'] ?? $flyer['url'];
+        ?>
+        <img src="<?php echo esc_url($flyer_src); ?>"
              alt="<?php the_title_attribute(); ?>"
-             style="width:100%;border-radius:6px;display:block;">
+             style="width:100%;height:auto;border-radius:6px;display:block;">
       <?php elseif (has_post_thumbnail()): ?>
         <?php the_post_thumbnail('ab-event-thumb', ['style'=>'width:100%;border-radius:6px;']); ?>
       <?php else: ?>
