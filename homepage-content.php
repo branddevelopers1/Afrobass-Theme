@@ -33,7 +33,7 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
       </video>
     <?php else: ?>
       <video id="ab-hero-video" autoplay muted loop playsinline>
-        <source src="https://afrobass.com/wp-content/uploads/2026/03/afrobass-home-page.mp4" type="video/mp4">
+        <source src="https://afrobass.com/wp-content/uploads/2026/10/afrobass-fest-with-proper-logo-v2.mov" type="video/mov">
       </video>
     <?php endif; ?>
     <div class="ab-hero-grain"></div>

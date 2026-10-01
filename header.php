@@ -59,7 +59,7 @@
   </ul>
 
   <div class="ab-nav-right">
-    <a href="https://www.afrobassfest.com" class="ab-btn-outline-sm" target="_blank" rel="noopener noreferrer">Buy Tickets</a>
+    <a href="/events" class="ab-btn-outline-sm" target="_blank" rel="noopener noreferrer">Buy Tickets</a>
     <a href="<?php echo esc_url(home_url('/book-talent')); ?>" class="ab-btn-fill-sm">Book Talent</a>
   </div>
 
@@ -77,7 +77,7 @@
   <a href="<?php echo esc_url(home_url('/contact')); ?>" class="ab-mobile-link">Contact</a>
   <div class="ab-mobile-cta">
     <a href="<?php echo esc_url(home_url('/book-talent')); ?>" class="ab-btn-fill-sm">Book Talent</a>
-    <a href="https://www.afrobassfest.com" class="ab-btn-outline-sm" target="_blank" rel="noopener noreferrer">Buy Tickets</a>
+    <a href="<?php echo esc_url(home_url('/events')); ?>" class="ab-btn-outline-sm" target="_blank" rel="noopener noreferrer">Buy Tickets</a>
   </div>
   <div style="margin-top:40px;">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">Get in Touch</div>
