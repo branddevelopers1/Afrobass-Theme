@@ -760,41 +760,6 @@ function ab_youtube_embed(string $url): string {
 }
 
 /* ============================================================
-   REDIRECT SITE ROOT → EVENTS PAGE
-   Visitors hitting afrobass.com land straight on the Events page
-   so they can buy tickets without losing focus. The designated
-   homepage (slug 'home-page') stays the official front page in
-   Settings → Reading but is bypassed at the root.
-   302 (temporary) so it can be reverted cleanly later; switch to
-   301 once you're certain this is permanent.
-============================================================ */
-function ab_redirect_root_to_events() {
-    // Only on the real site root, never in admin, feeds, REST, or AJAX.
-    if (is_admin() || wp_doing_ajax() || is_feed() || (defined('REST_REQUEST') && REST_REQUEST)) {
-        return;
-    }
-    // Only the BARE root URL ("/") should redirect — not the /home-page
-    // slug. Because Home Page is set as the front page, is_front_page()
-    // is true for BOTH "/" and "/home-page", so we must check the actual
-    // requested path and bail unless it's empty (the root).
-    $path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '', '/');
-    if ($path !== '') {
-        return; // e.g. "home-page", "events", etc. — leave them alone.
-    }
-
-    if (is_front_page()) {
-        $events = get_page_by_path('events');
-        // Guard against a loop: only redirect if an 'events' page exists
-        // and it isn't itself the front page.
-        if ($events && (int) get_option('page_on_front') !== (int) $events->ID) {
-            wp_safe_redirect(home_url('/events/'), 302);
-            exit;
-        }
-    }
-}
-add_action('template_redirect', 'ab_redirect_root_to_events');
-
-/* ============================================================
    FORCE PAGE TEMPLATES BY SLUG
    Eliminates need to manually assign templates in WP admin
 ============================================================ */
