@@ -522,6 +522,7 @@ function ab_register_acf_fields() {
             ['key'=>'field_ab_hero_line3',       'label'=>'Hero Line 3',             'name'=>'ab_hero_line3',      'type'=>'text',  'default_value'=>'To the World'],
             ['key'=>'field_ab_hero_subtext',     'label'=>'Hero Subtext',            'name'=>'ab_hero_subtext',    'type'=>'textarea','rows'=>3],
             ['key'=>'field_ab_hero_video',       'label'=>'Hero Background Video',   'name'=>'ab_hero_video',      'type'=>'file',  'return_format'=>'array', 'mime_types'=>'mp4,webm'],
+            ['key'=>'field_ab_hero_poster',      'label'=>'Hero Poster Image',      'name'=>'ab_hero_poster',     'type'=>'image', 'return_format'=>'array', 'instructions'=>'Shown instantly while the video loads, and as a fallback on devices that block video autoplay (e.g. Low Power / Data Saver mode). Use a still frame from the video or any hero image. Recommended 1920×1080.'],
             ['key'=>'field_ab_story_video',      'label'=>'Our Story Video',         'name'=>'ab_story_video',     'type'=>'file',  'return_format'=>'array', 'mime_types'=>'mp4,webm'],
             ['key'=>'field_ab_story_body',       'label'=>'Our Story Body Text',     'name'=>'ab_story_body',      'type'=>'wysiwyg'],
             ['key'=>'field_ab_milestones',       'label'=>'Milestones',              'name'=>'ab_milestones',      'type'=>'repeater',

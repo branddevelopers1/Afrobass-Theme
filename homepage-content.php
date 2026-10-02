@@ -16,6 +16,8 @@ $hero_accent = get_field('ab_hero_accent')   ?: 'Africa';
 $hero_line3  = get_field('ab_hero_line3')    ?: 'To the World';
 $hero_sub    = get_field('ab_hero_subtext')  ?: 'Afrobass produces world-class concerts, tours, and live events across Canada — connecting the best of African music and culture with North American audiences since 2018.';
 $hero_video  = get_field('ab_hero_video');
+$hero_poster = get_field('ab_hero_poster');
+$hero_poster_url = !empty($hero_poster['url']) ? $hero_poster['url'] : '';
 $story_video = get_field('ab_story_video');
 $story_body  = get_field('ab_story_body')    ?: '';
 $milestones  = get_field('ab_milestones')    ?: [];
@@ -28,12 +30,12 @@ $email       = ab_setting('ab_email')  ?: 'contact@afrobass.com';
 <section id="ab-hero" aria-label="Hero">
   <div id="ab-hero-video-wrap">
     <?php if (!empty($hero_video['url'])): ?>
-      <video id="ab-hero-video" autoplay muted loop playsinline>
+      <video id="ab-hero-video" autoplay muted loop playsinline preload="metadata"<?php echo $hero_poster_url ? ' poster="' . esc_url($hero_poster_url) . '"' : ''; ?>>
         <source src="<?php echo esc_url($hero_video['url']); ?>" type="video/mp4">
       </video>
     <?php else: ?>
-      <video id="ab-hero-video" autoplay muted loop playsinline>
-        <source src="https://afrobass.com/wp-content/uploads/2026/10/afrobass-fest-toronto-august-15th-2026-rebel.mp4" type="video/mP4">
+      <video id="ab-hero-video" autoplay muted loop playsinline preload="metadata"<?php echo $hero_poster_url ? ' poster="' . esc_url($hero_poster_url) . '"' : ''; ?>>
+        <source src="https://afrobass.com/wp-content/uploads/2026/10/afrobass-fest-toronto-august-15th-2026-rebel.mp4" type="video/mp4">
       </video>
     <?php endif; ?>
     <div class="ab-hero-grain"></div>
